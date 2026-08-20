@@ -14,12 +14,11 @@
       #kalap-boot h1{margin:0 0 8px;font-size:26px}#kalap-boot p{margin:0;color:#aaa19c;line-height:1.5;font-size:14px}
       #kalap-boot button{margin-top:18px;border:0;border-radius:13px;background:#ee4d2d;color:#fff;padding:12px 18px;font-weight:800}
       .tracker-static-launcher{visibility:hidden}
-      html[data-kalap-ready='1'] #kalap-boot{display:none}
       html[data-kalap-ready='1'] .tracker-static-launcher{visibility:visible}
     </style>
-    <link rel="stylesheet" href="./src/styles.css?v=1104" />
-    <link rel="stylesheet" href="./src/patch.css?v=1104" />
-    <link rel="stylesheet" href="./src/tracker.css?v=1104" />
+    <link rel="stylesheet" href="./src/styles.css?v=1105" />
+    <link rel="stylesheet" href="./src/patch.css?v=1105" />
+    <link rel="stylesheet" href="./src/tracker.css?v=1105" />
   </head>
   <body>
     <div id="root">
@@ -36,15 +35,25 @@
       <span>📦</span><strong>Pesanan</strong><b id="kalap-tracker-count" hidden>0</b>
     </button>
     <script>
-      window.setTimeout(function(){
-        if(document.documentElement.dataset.kalapReady==='1') return;
-        var copy=document.getElementById('kalap-boot-copy');
-        var retry=document.getElementById('kalap-retry');
-        if(copy) copy.textContent='Koneksi ke aset GitHub Pages agak lambat. Coba muat ulang halaman.';
-        if(retry){retry.hidden=false;retry.onclick=function(){location.reload()}}
-      },7000);
+      (function(){
+        var root=document.getElementById('root');
+        var observer=new MutationObserver(function(){
+          if(root && !document.getElementById('kalap-boot') && root.children.length){
+            document.documentElement.dataset.kalapReady='1';
+            observer.disconnect();
+          }
+        });
+        if(root) observer.observe(root,{childList:true,subtree:true});
+        window.setTimeout(function(){
+          if(document.documentElement.dataset.kalapReady==='1') return;
+          var copy=document.getElementById('kalap-boot-copy');
+          var retry=document.getElementById('kalap-retry');
+          if(copy) copy.textContent='Koneksi ke aset GitHub Pages agak lambat. Coba muat ulang halaman.';
+          if(retry){retry.hidden=false;retry.onclick=function(){location.reload()}}
+        },7000);
+      })();
     </script>
-    <script type="module" src="./src/app.js?v=1104"></script>
-    <script type="module" src="./src/tracker.js?v=1104"></script>
+    <script type="module" src="./src/app.js?v=1105"></script>
+    <script type="module" src="./src/tracker.js?v=1105"></script>
   </body>
 </html>
