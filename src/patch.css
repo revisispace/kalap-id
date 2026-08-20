@@ -42,12 +42,28 @@
   color: var(--ink);
 }
 
+/* KALAP! v1.1 — Dopamine */
+.utility-button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:12px;padding:10px 12px;font-weight:800}
+.utility-button:hover{background:var(--ink);color:#fff}
+.v11-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 4.5vw 16px}
+.challenge-card,.rank-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:22px;display:flex;align-items:center;gap:18px;box-shadow:0 14px 30px rgba(25,22,20,.05)}
+.challenge-card.done{background:#eefaf4;border-color:#bfe3cf}.challenge-icon,.rank-giant{font-size:46px;flex:0 0 auto}.challenge-card h3,.rank-card h3{font-family:'Space Grotesk',sans-serif;font-size:24px;margin:4px 0}.challenge-card p,.rank-card p{margin:0 0 8px;color:var(--muted)}.challenge-card>div:last-child>strong{font-size:12px;color:var(--green)}
+.rank-meter{height:10px;border-radius:999px;background:#eee4de;overflow:hidden;margin:10px 0 6px}.rank-meter i{display:block;height:100%;background:var(--red);border-radius:inherit}.rank-card small{color:var(--muted)}
+.rank-chip{margin-top:16px;padding:13px 15px;border:1px solid rgba(255,255,255,.15);border-radius:16px;background:rgba(255,255,255,.07);display:flex;align-items:center;gap:12px}.rank-chip>span{font-size:30px}.rank-chip div{display:grid}.rank-chip small{font-size:9px;letter-spacing:1.3px;color:#bbb3ae}.rank-chip strong{font-size:15px}.rank-chip em{font-size:10px;font-style:normal;color:#bbb3ae}
+.wallet-warning{margin:0 0 12px;padding:10px 12px;border-radius:12px;background:#fff0e9;color:#a33a32;font-size:12px;font-weight:700}.checkout-wallet-breakdown{margin:20px 0;display:grid;gap:8px}.checkout-wallet-breakdown>div{display:flex;justify-content:space-between;gap:20px;padding:11px 13px;border-radius:12px;background:#f4ece7}.checkout-wallet-breakdown .after{background:#191614;color:#fff}.checkout-wallet-breakdown.danger .after{background:#8e2d28}.reset-callout,.challenge-complete-mini{margin:14px 0;padding:12px;border-radius:12px;background:#fff0e9;color:#8d443b;font-size:12px}.success-amount.spend{color:var(--red)}.success-wallet{display:grid;gap:4px;margin:18px 0;padding:18px;border-radius:18px;background:#191614;color:#fff}.success-wallet small,.success-wallet span{color:#c8c1bc}.success-wallet strong{font-size:28px}
+.panel-modal{position:relative;width:min(680px,100%);max-height:min(82vh,820px);overflow:auto;border-radius:28px;background:#fffaf7;padding:32px;box-shadow:0 24px 90px rgba(0,0,0,.24)}.panel-modal>.icon-button{position:absolute;right:16px;top:16px}.panel-modal h2{font-size:32px;margin:7px 0}.panel-modal>p{color:var(--muted);margin:0 0 18px}.history-list{display:grid;gap:9px}.history-row{display:flex;justify-content:space-between;align-items:center;padding:13px;border:1px solid var(--line);border-radius:15px;background:#fff}.history-row>div:first-child{display:flex;align-items:center;gap:10px}.history-row>div:first-child>span{font-size:26px}.history-row>div{display:grid}.history-row small{color:var(--muted);font-size:10px}.history-row>div:last-child{text-align:right}.panel-empty{text-align:center;padding:40px;color:var(--muted)}
+.achievement-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.achievement{display:flex;align-items:center;gap:12px;padding:15px;border:1px solid var(--line);border-radius:16px;background:#f4efeb;opacity:.55}.achievement.unlocked{background:#fff;border-color:#e3d4cb;opacity:1;box-shadow:0 9px 24px rgba(25,22,20,.05)}.achievement>span{font-size:30px}.achievement>div{display:grid}.achievement small{color:var(--muted);font-size:10px}
+
 @media (max-width: 1180px) {
   .store-switcher { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+@media(max-width:980px){.v11-grid{grid-template-columns:1fr}.top-actions{flex-wrap:wrap;justify-content:flex-end}.utility-button{display:none}}
 
 @media (max-width: 760px) {
   .store-switcher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cart-summary .modal-actions,
   .modal-actions { grid-template-columns: 1fr; }
 }
+
+@media(max-width:680px){.v11-grid{padding:0 18px 14px}.challenge-card,.rank-card{align-items:flex-start}.achievement-grid{grid-template-columns:1fr}.panel-modal{padding:26px 18px}.brand-sub{font-size:9px}}
