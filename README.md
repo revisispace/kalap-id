@@ -25,11 +25,11 @@ Buka `http://localhost:8080`.
 
 ## GitHub Pages
 
-1. Push seluruh isi folder ke repository GitHub bernama `kalap-id`.
-2. Buka Settings > Pages.
-3. Pilih Deploy from a branch.
-4. Gunakan branch `main`, folder `/ (root)`.
-5. Save.
+Repository menggunakan GitHub Actions untuk deployment Pages. Setelah Pages diaktifkan di Settings > Pages dengan Source = GitHub Actions, setiap push ke branch `main` akan memicu deployment otomatis melalui `.github/workflows/pages.yml`.
+
+Target production URL:
+
+`https://revisispace.github.io/kalap-id/`
 
 Karena semua asset menggunakan relative paths dan tidak ada client-side route, project dapat berjalan langsung dari GitHub Pages project URL.
 
