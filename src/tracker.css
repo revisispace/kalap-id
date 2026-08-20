@@ -1,6 +1,31 @@
+.tracker-static-launcher {
+  position: fixed;
+  right: 16px;
+  bottom: calc(92px + env(safe-area-inset-bottom));
+  z-index: 140;
+  min-width: 124px;
+  height: 52px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #191614;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 12px 38px rgba(0,0,0,.28);
+  cursor: pointer;
+}
+.tracker-static-launcher > span { font-size: 17px; }
+.tracker-static-launcher > strong { font-size: 13px; }
+.tracker-static-launcher > b { position: absolute; top: -5px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; display: grid; place-items: center; background: #e64b3f; color: #fff; font-size: 10px; }
+.tracker-static-launcher > b[hidden] { display: none; }
 .tracker-header-button { position: relative; }
 .tracker-badge { position: absolute; top: -7px; right: -7px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; display: grid; place-items: center; background: var(--red); color: #fff; font-size: 10px; }
-.tracker-overlay { position: fixed; inset: 0; z-index: 120; background: rgba(12,10,9,.62); backdrop-filter: blur(7px); display: grid; place-items: center; padding: 24px; }
+.tracker-overlay { position: fixed; inset: 0; z-index: 160; background: rgba(12,10,9,.62); backdrop-filter: blur(7px); display: grid; place-items: center; padding: 24px; }
 .tracker-sheet { width: min(820px, 100%); max-height: min(860px, 92vh); overflow: auto; background: #fffaf7; border-radius: 30px; box-shadow: 0 30px 100px rgba(0,0,0,.28); padding: 28px; }
 .tracker-sheet-head, .tracker-detail-nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .tracker-sheet-head h2 { margin: 5px 0 6px; font-size: 34px; }
@@ -72,43 +97,17 @@
 .food-detail .tracker-step small { color: #109b66; }
 .tracker-disclaimer { margin-top: 12px; padding: 12px; border-radius: 13px; background: #f4eeea; color: var(--muted); font-size: 11px; line-height: 1.5; }
 
+@media (min-width: 761px) {
+  .tracker-static-launcher { display: none; }
+}
+
 @media (max-width: 760px) {
-  .tracker-header-button {
-    display: flex !important;
-    position: fixed !important;
-    right: 16px !important;
-    bottom: calc(92px + env(safe-area-inset-bottom)) !important;
-    z-index: 105 !important;
-    width: auto !important;
-    min-width: 124px !important;
-    height: 52px !important;
-    padding: 0 16px !important;
-    border: 0 !important;
-    border-radius: 999px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 7px !important;
-    background: #191614 !important;
-    color: #fff !important;
-    font-size: 13px !important;
-    font-weight: 800 !important;
-    box-shadow: 0 12px 38px rgba(0,0,0,.28) !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: none !important;
-  }
-  .tracker-header-button::before { content: '📦'; font-size: 17px; }
-  .tracker-header-button { font-size: 0 !important; }
-  .tracker-header-button::after { content: 'Pesanan'; font-size: 13px; }
-  .tracker-header-button .tracker-badge { font-size: 10px !important; top: -5px; right: -4px; }
+  .tracker-header-button { display: none !important; }
+  .tracker-static-launcher { display: flex !important; }
   .tracker-overlay { padding: 0; align-items: end; }
   .tracker-sheet { max-height: 94vh; border-radius: 26px 26px 0 0; padding: 20px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
   .tracker-sheet-head h2, .tracker-detail-hero h2 { font-size: 27px; }
   .tracker-order-top { grid-template-columns: 46px 1fr; }
   .tracker-order-price { grid-column: 2; text-align: left; }
   .tracker-tabs { position: sticky; top: -20px; z-index: 5; background: #fffaf7; padding: 8px 0; }
-}
-
-@media (max-width: 390px) {
-  .tracker-header-button { right: 12px !important; bottom: calc(84px + env(safe-area-inset-bottom)) !important; min-width: 112px !important; height: 48px !important; }
 }
