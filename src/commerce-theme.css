@@ -1,0 +1,346 @@
+/* KALAP! v1.1 commerce experience overrides
+   Parent brand stays dark; shopping and tracking areas use familiar light commerce patterns. */
+
+/* Header order access: compact, predictable, never floating over content. */
+.order-button {
+  position: relative;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #262321;
+  color: #fff;
+  border-radius: 13px;
+  padding: 10px 13px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: none;
+}
+.order-button b {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: #ee4d2d;
+  color: #fff;
+  border: 2px solid #11100f;
+  font-size: 10px;
+}
+
+/* Shopping zone is intentionally light, like mainstream delivery / marketplace apps. */
+.store-switcher-wrap,
+.marketplace {
+  background: #f7f7f7;
+  color: #222;
+}
+.marketplace {
+  border-top: 1px solid #ececec;
+}
+.marketplace .market-header h2,
+.store-switcher-wrap .section-heading h2,
+.marketplace .product-body h3,
+.marketplace .price {
+  color: #222;
+}
+.marketplace .market-header p,
+.store-switcher-wrap .section-heading p,
+.marketplace .result-meta,
+.marketplace .rating-row small {
+  color: #777;
+}
+.marketplace .search-box {
+  background: #fff;
+  color: #222;
+  border-color: #e7e7e7;
+}
+.marketplace .search-box input {
+  color: #222;
+}
+.marketplace .search-box input::placeholder {
+  color: #aaa;
+}
+.marketplace .product-card {
+  background: #fff;
+  color: #222;
+  border-color: #ededed;
+  box-shadow: 0 7px 20px rgba(0,0,0,.05);
+}
+.store-switcher-wrap .store-tab {
+  background: #fff;
+  color: #222;
+  border-color: #e7e7e7;
+}
+.store-switcher-wrap .store-tab small {
+  color: #888;
+}
+
+/* FOOD: delivery-app mental model — white + green. */
+.app-shell:has(.store-tab[data-store="makanan"].active) .store-switcher-wrap,
+.app-shell:has(.store-tab[data-store="makanan"].active) .marketplace {
+  background: #f5faf7;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .store-tab[data-store="makanan"].active {
+  background: #0f9d68;
+  border-color: #0f9d68;
+  color: #fff;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .store-tab[data-store="makanan"].active small {
+  color: #dff6eb;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .marketplace .eyebrow.dark {
+  color: #0f8b5d;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .product-body button,
+.app-shell:has(.store-tab[data-store="makanan"].active) .load-more {
+  background: #0f9d68;
+  border-color: #0f9d68;
+  color: #fff;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .cart-button {
+  background: #0f9d68;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .cart-drawer,
+.app-shell:has(.store-tab[data-store="makanan"].active) .checkout-modal {
+  background: #fff;
+  color: #222;
+}
+.app-shell:has(.store-tab[data-store="makanan"].active) .checkout-modal .modal-actions button:not(.ghost),
+.app-shell:has(.store-tab[data-store="makanan"].active) .cart-summary .modal-actions button:not(.ghost) {
+  background: #0f9d68;
+  color: #fff;
+}
+
+/* GOODS: e-commerce mental model — white + orange. */
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .store-switcher-wrap,
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .marketplace {
+  background: #f7f7f7;
+}
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .store-tab.active {
+  background: #ee4d2d;
+  border-color: #ee4d2d;
+  color: #fff;
+}
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .store-tab.active small {
+  color: #ffe2dc;
+}
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .marketplace .eyebrow.dark {
+  color: #ee4d2d;
+}
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .product-body button,
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .load-more {
+  background: #ee4d2d;
+  border-color: #ee4d2d;
+  color: #fff;
+}
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .cart-drawer,
+.app-shell:not(:has(.store-tab[data-store="makanan"].active)) .checkout-modal {
+  background: #fff;
+  color: #222;
+}
+
+/* Tracker is always light and transaction-focused. */
+.order-panel {
+  background: #fff !important;
+  color: #222 !important;
+  border: 1px solid #eee;
+}
+.order-panel > p,
+.order-panel .tracker-order-top small,
+.order-panel .tracker-order-top span,
+.order-panel .tracker-order-price small,
+.order-panel .tracker-status-row small,
+.order-panel .tracker-status-row span,
+.order-panel .tracker-detail-hero p,
+.order-panel .tracker-step p,
+.order-panel .tracker-order-summary small,
+.order-panel .tracker-disclaimer {
+  color: #777 !important;
+}
+.order-panel .tracker-order-card {
+  background: #fff;
+  color: #222;
+  border-color: #ececec;
+  box-shadow: 0 8px 24px rgba(0,0,0,.05);
+}
+.order-panel.food .tracker-tab.food.active {
+  background: #0f9d68;
+  border-color: #0f9d68;
+  color: #fff;
+}
+.order-panel.goods .tracker-tab.goods.active {
+  background: #ee4d2d;
+  border-color: #ee4d2d;
+  color: #fff;
+}
+.order-panel .tracker-tab:not(.active) {
+  background: #fff;
+  color: #333;
+  border-color: #e5e5e5;
+}
+.order-panel.food .tracker-detail-hero > b {
+  background: #e8f7f0;
+  color: #08764e;
+}
+.order-panel.goods .tracker-detail-hero > b {
+  background: #fff0eb;
+  color: #c53f25;
+}
+.order-panel.food .tracker-detail-button {
+  background: #0f9d68;
+}
+.order-panel.goods .tracker-detail-button {
+  background: #ee4d2d;
+}
+.order-panel.food .tracker-step.done .tracker-step-dot,
+.order-panel.food .tracker-step.current .tracker-step-dot {
+  background: #0f9d68;
+}
+.order-panel.goods .tracker-step.done .tracker-step-dot,
+.order-panel.goods .tracker-step.current .tracker-step-dot {
+  background: #ee4d2d;
+}
+.order-panel .tracker-back,
+.order-panel .icon-button {
+  background: #f1f1f1 !important;
+  color: #222 !important;
+}
+.order-panel .tracker-disclaimer {
+  background: #f5f5f5;
+}
+
+@media (max-width: 760px) {
+  /* Keep brand/home dark but make the commerce area feel like an app. */
+  body { padding-bottom: 0 !important; }
+
+  .topbar {
+    padding: 10px 12px !important;
+    min-height: 68px !important;
+  }
+  .brand-wrap { min-width: 112px; }
+  .brand { font-size: 17px !important; }
+  .brand-sub { display: none !important; }
+  .top-actions {
+    display: flex !important;
+    flex: 1;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 7px !important;
+    min-width: 0;
+  }
+
+  /* Pesanan sits in the header like a normal app action — no floating overlap. */
+  .order-button {
+    position: relative !important;
+    inset: auto !important;
+    z-index: auto !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    border-radius: 13px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: #282522 !important;
+    box-shadow: none !important;
+    font-size: 18px !important;
+  }
+  .order-button span { display: none !important; }
+  .order-button b {
+    top: -5px !important;
+    right: -5px !important;
+    border-color: #11100f !important;
+  }
+
+  .wallet-pill {
+    max-width: 108px;
+    padding: 7px 9px !important;
+  }
+  .wallet-pill strong { font-size: 12px !important; }
+  .cart-button {
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 44px;
+  }
+
+  .store-switcher-wrap,
+  .marketplace {
+    color: #222 !important;
+  }
+  .section-heading h2,
+  .market-header h2,
+  .product-body h3,
+  .price {
+    color: #222 !important;
+  }
+  .section-heading p,
+  .market-header p,
+  .result-meta,
+  .rating-row small {
+    color: #777 !important;
+  }
+  .store-tab,
+  .product-card,
+  .search-box {
+    background: #fff !important;
+    color: #222 !important;
+    border-color: #e8e8e8 !important;
+  }
+  .store-tab small { color: #888 !important; }
+
+  .app-shell:has(.store-tab[data-store="makanan"].active) .store-tab[data-store="makanan"].active {
+    background: #0f9d68 !important;
+    border-color: #0f9d68 !important;
+    color: #fff !important;
+  }
+  .app-shell:has(.store-tab[data-store="makanan"].active) .store-tab[data-store="makanan"].active small {
+    color: #dcf4e9 !important;
+  }
+  .app-shell:not(:has(.store-tab[data-store="makanan"].active)) .store-tab.active {
+    background: #ee4d2d !important;
+    border-color: #ee4d2d !important;
+    color: #fff !important;
+  }
+  .app-shell:not(:has(.store-tab[data-store="makanan"].active)) .store-tab.active small {
+    color: #ffe2dc !important;
+  }
+
+  .panel-modal.order-panel {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: 92dvh !important;
+    border-radius: 26px 26px 0 0 !important;
+    padding: 20px 16px calc(24px + env(safe-area-inset-bottom)) !important;
+    background: #fff !important;
+    color: #222 !important;
+  }
+  .order-panel h2,
+  .order-panel strong { color: #222; }
+  .order-panel .tracker-tabs {
+    position: sticky;
+    top: -20px;
+    z-index: 4;
+    background: #fff;
+    padding: 8px 0;
+  }
+  .order-panel .tracker-order-top {
+    grid-template-columns: 46px 1fr;
+  }
+  .order-panel .tracker-order-price {
+    grid-column: 2;
+    text-align: left;
+  }
+}
+
+@media (max-width: 390px) {
+  .brand-wrap { min-width: 100px; }
+  .brand-mark { width: 38px !important; height: 38px !important; }
+  .brand { font-size: 15px !important; }
+  .order-button,
+  .cart-button { width: 40px !important; min-width: 40px !important; height: 40px !important; flex-basis: 40px !important; }
+  .wallet-pill { max-width: 100px; }
+}
