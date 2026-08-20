@@ -13,15 +13,24 @@ const defaultState = () => ({
   activeStore: 'makanan',
   query: '',
   visibleCount: 20,
-  carts: { makanan: [], pakaian: [], sepatu: [], tumbler: [] },
-  savedByStore: { makanan: 0, pakaian: 0, sepatu: 0, tumbler: 0 },
+  carts: { makanan: [], pakaian: [], sepatu: [], tumbler: [], tas: [] },
+  savedByStore: { makanan: 0, pakaian: 0, sepatu: 0, tumbler: 0, tas: 0 },
   lifetimeSaved: 0,
 })
 
 function loadState() {
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '{}')
-    return { ...defaultState(), ...saved, activeStore: 'makanan', query: '', visibleCount: 20 }
+    const defaults = defaultState()
+    return {
+      ...defaults,
+      ...saved,
+      carts: { ...defaults.carts, ...(saved.carts || {}) },
+      savedByStore: { ...defaults.savedByStore, ...(saved.savedByStore || {}) },
+      activeStore: 'makanan',
+      query: '',
+      visibleCount: 20,
+    }
   } catch {
     return defaultState()
   }
@@ -117,7 +126,7 @@ function render() {
               <span class="eyebrow dark">PILIH TOKO</span>
               <h2>Satu mood, satu storefront</h2>
             </div>
-            <p>Makanan, pakaian, sepatu, dan tumbler punya keranjang masing-masing. Tidak ada item lintas kategori.</p>
+            <p>Makanan, pakaian, sepatu, tumbler, dan tas punya keranjang masing-masing. Tidak ada item lintas kategori.</p>
           </div>
 
           <div class="store-switcher">
