@@ -45,6 +45,14 @@ const tumblerTypes = [
 ]
 const tumblerStyles = ['Midnight', 'Cloud', 'Sage', 'Terracotta', 'Ocean']
 
+const bagTypes = [
+  'Tote Bag Premium', 'Sling Bag Urban', 'Backpack Minimalis', 'Handbag Structured', 'Shoulder Bag Classic',
+  'Crossbody Bag', 'Hobo Bag', 'Bucket Bag', 'Satchel Bag', 'Messenger Bag',
+  'Laptop Bag 14 Inch', 'Weekender Bag', 'Duffel Bag', 'Mini Bag', 'Camera Bag',
+  'Waist Bag', 'Drawstring Bag', 'Travel Bag', 'Canvas Tote', 'Leather Tote'
+]
+const bagStyles = ['Onyx Black', 'Ivory Cream', 'Mocha Brown', 'Forest Olive', 'Stone Grey']
+
 const imagePools = {
   makanan: [
     'https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?auto=format&fit=crop&w=900&q=80',
@@ -74,6 +82,13 @@ const imagePools = {
     'https://images.unsplash.com/photo-1605714196241-00bf7a8fe7bb?auto=format&fit=crop&w=900&q=80',
     'https://images.unsplash.com/photo-1523362628745-0c100150b504?auto=format&fit=crop&w=900&q=80',
     'https://images.unsplash.com/photo-1575377427642-087cf684f29d?auto=format&fit=crop&w=900&q=80'
+  ],
+  tas: [
+    'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=80',
+    'https://images.unsplash.com/photo-1585488434455-1e7b6b7a9b60?auto=format&fit=crop&w=900&q=80'
   ]
 }
 
@@ -118,15 +133,17 @@ function combinations(types, styles, category, prefix, min, max) {
   }))
 }
 
-const pakaian = combinations(clothingTypes, clothingStyles, 'pakaian', 'cloth', 79000, 799000)
-const sepatu = combinations(shoeTypes, shoeStyles, 'sepatu', 'shoe', 129000, 1699000)
+const pakaian = combinations(clothingTypes, clothingStyles, 'pakaian', 'cloth', 500000, 3200000)
+const sepatu = combinations(shoeTypes, shoeStyles, 'sepatu', 'shoe', 500000, 4500000)
 const tumbler = combinations(tumblerTypes, tumblerStyles, 'tumbler', 'tumbler', 59000, 699000)
+const tas = combinations(bagTypes, bagStyles, 'tas', 'bag', 249000, 2999000)
 
-export const catalog = { makanan, pakaian, sepatu, tumbler }
+export const catalog = { makanan, pakaian, sepatu, tumbler, tas }
 
 export const storefronts = [
   { key: 'makanan', label: 'Makanan', icon: '🍜', subtitle: '100 menu Indonesia' },
-  { key: 'pakaian', label: 'Pakaian', icon: '👕', subtitle: '100 pilihan fashion' },
-  { key: 'sepatu', label: 'Sepatu', icon: '👟', subtitle: '100 pilihan sepatu' },
+  { key: 'pakaian', label: 'Pakaian', icon: '👕', subtitle: '100 pilihan fashion premium' },
+  { key: 'sepatu', label: 'Sepatu', icon: '👟', subtitle: '100 pilihan sepatu premium' },
   { key: 'tumbler', label: 'Tumbler', icon: '🥤', subtitle: '100 pilihan tumbler' },
+  { key: 'tas', label: 'Tas', icon: '👜', subtitle: '100 pilihan tas' },
 ]
