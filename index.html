@@ -8,11 +8,14 @@
     <title>KALAP! — The Dopamine Marketplace</title>
     <link rel="stylesheet" href="./src/styles.css" />
     <link rel="stylesheet" href="./src/patch.css" />
-    <link rel="stylesheet" href="./src/tracker.css" />
+    <link rel="stylesheet" href="./src/tracker.css?v=1102" />
   </head>
   <body>
     <div id="root"></div>
+    <button id="kalap-tracker-launcher" class="tracker-static-launcher" type="button" aria-label="Buka tracker pesanan">
+      <span>📦</span><strong>Pesanan</strong><b id="kalap-tracker-count" hidden>0</b>
+    </button>
     <script type="module" src="./src/app.js"></script>
-    <script type="module" src="./src/tracker.js"></script>
+    <script type="module" src="./src/tracker.js?v=1102"></script>
   </body>
 </html>
