@@ -18,6 +18,25 @@ const challenges = [
   { id: 'burn-15m', icon: '🌋', title: 'Almost Broke', text: 'Bakar Rp15 juta hari ini.', check: s => s.dailySpent >= 15_000_000 },
 ]
 
+const foodTrackingSteps = [
+  ['Pesanan dibuat', 'Pesanan simulasi masuk ke restoran'],
+  ['Restoran menerima pesanan', 'Dapur menerima pesanan kamu'],
+  ['Makanan sedang disiapkan', 'Pesanan simulasi sedang dimasak'],
+  ['Driver menuju restoran', 'Driver simulasi menuju titik pickup'],
+  ['Pesanan dalam perjalanan', 'Driver simulasi sedang menuju alamatmu'],
+  ['Pesanan tiba', 'Makanan simulasi sudah sampai'],
+]
+
+const goodsTrackingSteps = [
+  ['Pesanan dibuat', 'Checkout simulasi berhasil'],
+  ['Penjual memproses pesanan', 'Barang sedang disiapkan penjual'],
+  ['Pesanan dikemas', 'Paket simulasi sudah dibungkus'],
+  ['Diserahkan ke kurir', 'Kurir simulasi menerima paket'],
+  ['Paket di pusat sortir', 'Paket simulasi sedang diproses'],
+  ['Paket menuju alamatmu', 'Kurir simulasi sedang mengantar'],
+  ['Pesanan diterima', 'Paket simulasi sudah sampai'],
+]
+
 function localDateKey(date = new Date()) {
   const y = date.getFullYear()
   const m = String(date.getMonth() + 1).padStart(2, '0')
@@ -82,6 +101,8 @@ let checkoutStage = null
 let checkoutAmount = 0
 let checkoutStore = null
 let panelOpen = null
+let trackerTab = 'food'
+let selectedOrderId = null
 let toastTimer = null
 
 function persist() {
@@ -120,6 +141,31 @@ function countdownText() {
 }
 function updateCountdown() { document.querySelectorAll('[data-wallet-countdown]').forEach(node => node.textContent = countdownText()) }
 
+function isFoodOrder(order) { return order.store === 'makanan' }
+function trackerProgress(order) {
+  const food = isFoodOrder(order)
+  const steps = food ? foodTrackingSteps : goodsTrackingSteps
+  const thresholds = food ? [0, 12, 30, 50, 75, 105] : [0, 20, 45, 75, 110, 150, 200]
+  const created = new Date(order.date).getTime()
+  const elapsed = Number.isFinite(created) ? Math.max(0, Math.floor((Date.now() - created) / 1000)) : 0
+  let active = 0
+  thresholds.forEach((threshold, index) => { if (elapsed >= threshold) active = index })
+  return { steps, active, completed: active === steps.length - 1 }
+}
+function orderCode(order) {
+  const created = new Date(order.date).getTime()
+  const suffix = Number.isFinite(created) ? String(created).slice(-7) : String(order.id || '').slice(-7)
+  return `${isFoodOrder(order) ? 'KF' : 'KB'}-${suffix}`
+}
+function activeOrderCount() { return state.transactionHistory.filter(order => !trackerProgress(order).completed).length }
+function filteredOrders() { return state.transactionHistory.filter(order => trackerTab === 'food' ? isFoodOrder(order) : !isFoodOrder(order)) }
+function orderStatus(order) { const progress = trackerProgress(order); return progress.steps[progress.active][0] }
+function orderEta(order) {
+  const progress = trackerProgress(order)
+  if (progress.completed) return 'Selesai'
+  return isFoodOrder(order) ? 'Estimasi tiba 2–4 menit' : 'Paket simulasi sedang bergerak'
+}
+
 function evaluateAchievements() {
   const earned = new Set(state.achievements)
   const add = id => earned.add(id)
@@ -155,11 +201,13 @@ function render() {
   const info = storeInfo(), filtered = filteredProducts(), shown = filtered.slice(0, state.visibleCount)
   const activeCart = cart(), currentSubtotal = subtotal(), currentCartCount = cartCountFor(), percent = walletPercent(), rank = kalapRank(), challenge = todayChallenge()
   const challengeDone = challenge.check(state)
+  const activeOrders = activeOrderCount()
 
   root.innerHTML = `<div class="app-shell">
     <header class="topbar">
       <div class="brand-wrap"><div class="brand-mark">K!</div><div><div class="brand">KALAP!</div><div class="brand-sub">v1.1 · dopamine</div></div></div>
       <div class="top-actions">
+        <button class="order-button" data-action="open-orders">📦 <span>Pesanan</span>${activeOrders ? `<b>${activeOrders}</b>` : ''}</button>
         <button class="utility-button" data-action="open-history">🧾 Riwayat</button>
         <button class="utility-button" data-action="open-badges">🏆 Badge</button>
         <div class="wallet-pill"><span class="wallet-pill-icon">💳</span><span><small>KALAP WALLET</small><strong>${currency.format(state.walletBalance)}</strong><em>reset <b data-wallet-countdown>${countdownText()}</b></em></span></div>
@@ -169,7 +217,7 @@ function render() {
 
     <main>
       <section class="hero">
-        <div class="hero-copy"><span class="eyebrow">V1.1 · DOPAMINE MODE</span><h1>Boleh kalap.<br><em>Pakai duit bohongan.</em></h1><p>Rp20 juta setiap hari, daily challenge, streak, rank, badge, dan riwayat checkout — semuanya tetap lokal di device.</p></div>
+        <div class="hero-copy"><span class="eyebrow">V1.1 · DOPAMINE MODE</span><h1>Boleh kalap.<br><em>Pakai duit bohongan.</em></h1><p>Rp20 juta setiap hari, daily challenge, streak, rank, badge, tracker pesanan, dan riwayat checkout — semuanya tetap lokal di device.</p></div>
         <div class="hero-wallet">
           <div class="hero-wallet-head"><span>💳 KALAP WALLET</span><b>🔥 ${state.streak} day streak</b></div>
           <strong>${currency.format(state.walletBalance)}</strong>
@@ -196,7 +244,7 @@ function render() {
       ${state.visibleCount < filtered.length ? `<div class="load-more-wrap"><button class="load-more" data-action="load-more">Tampilkan 20 lagi</button><small>${filtered.length - state.visibleCount} item tersisa</small></div>` : ''}</section>
     </main>
 
-    <footer><strong>KALAP! v1.1</strong><span>Semua saldo, streak, badge, dan riwayat tersimpan hanya di localStorage device ini.</span></footer>
+    <footer><strong>KALAP! v1.1</strong><span>Semua saldo, streak, badge, tracker, dan riwayat tersimpan hanya di localStorage device ini.</span></footer>
     ${cartOpen ? renderCart(activeCart, info, currentSubtotal) : ''}${checkoutStage ? renderCheckout() : ''}${panelOpen ? renderPanel() : ''}
   </div>`
 
@@ -218,7 +266,36 @@ function renderCheckout() {
   return `<div class="overlay modal-overlay" data-action="close-modal-bg"><div class="checkout-modal"><button class="icon-button" data-action="close-checkout">×</button><span class="big-emoji">🔥</span><span class="eyebrow dark">KALAP BERHASIL</span><h2>Saldo bohongan sukses dibakar.</h2><div class="success-amount spend">− ${currency.format(amount)}</div><div class="success-wallet"><small>Sisa KALAP Wallet</small><strong>${currency.format(state.walletBalance)}</strong><span>${rank.icon} ${rank.name} • 🔥 ${state.streak} day streak</span></div>${done ? `<div class="challenge-complete-mini">✅ Today's Challenge selesai: <strong>${challenge.title}</strong></div>` : ''}<button data-action="close-checkout">Lanjut Kalap</button></div></div>`
 }
 
+function renderOrderTracker() {
+  if (selectedOrderId) {
+    const order = state.transactionHistory.find(item => item.id === selectedOrderId)
+    if (order) return renderOrderDetail(order)
+    selectedOrderId = null
+  }
+
+  const orders = filteredOrders()
+  const foodCount = state.transactionHistory.filter(isFoodOrder).length
+  const goodsCount = state.transactionHistory.length - foodCount
+  return `<div class="overlay modal-overlay" data-action="close-panel-bg"><div class="panel-modal order-panel ${trackerTab}"><button class="icon-button" data-action="close-panel">×</button><span class="eyebrow dark">KALAP ORDER TRACKER</span><h2>📦 Pesanan Simulasi</h2><p>Makanan dan barang punya alur tracking yang berbeda.</p><div class="tracker-tabs"><button class="tracker-tab food ${trackerTab==='food'?'active':''}" data-action="tracker-tab" data-tab="food">🍜 Makanan <b>${foodCount}</b></button><button class="tracker-tab goods ${trackerTab==='goods'?'active':''}" data-action="tracker-tab" data-tab="goods">📦 Barang <b>${goodsCount}</b></button></div><div class="tracker-list">${orders.length ? orders.map(renderOrderCard).join('') : `<div class="tracker-empty"><span>${trackerTab==='food'?'🍜':'📦'}</span><strong>Belum ada pesanan ${trackerTab==='food'?'makanan':'barang'}.</strong><p>Fake checkout dulu, lalu statusnya akan muncul di sini.</p></div>`}</div></div></div>`
+}
+
+function renderOrderCard(order) {
+  const meta = storeInfo(order.store)
+  const progress = trackerProgress(order)
+  const date = new Date(order.date)
+  const pct = progress.active / Math.max(1, progress.steps.length - 1) * 100
+  return `<article class="tracker-order-card ${isFoodOrder(order)?'food-order':'goods-order'}"><div class="tracker-order-top"><div class="tracker-order-icon">${meta.icon}</div><div><small>${orderCode(order)}</small><strong>${meta.label}</strong><span>${date.toLocaleDateString('id-ID')} · ${date.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</span></div><div class="tracker-order-price"><strong>${currency.format(order.amount)}</strong><small>${order.items || 0} item</small></div></div><div class="tracker-status-row"><div><small>Status sekarang</small><strong>${orderStatus(order)}</strong><span>${orderEta(order)}</span></div><div class="tracker-status-icon">${progress.completed?'✅':isFoodOrder(order)?'🛵':'🚚'}</div></div><div class="tracker-mini-progress"><i style="width:${pct}%"></i></div><button class="tracker-detail-button" data-action="tracker-detail" data-id="${order.id}">Lacak Pesanan →</button></article>`
+}
+
+function renderOrderDetail(order) {
+  const progress = trackerProgress(order)
+  const food = isFoodOrder(order)
+  const meta = storeInfo(order.store)
+  return `<div class="overlay modal-overlay" data-action="close-panel-bg"><div class="panel-modal order-panel order-detail ${food?'food':'goods'}"><div class="tracker-detail-nav"><button class="tracker-back" data-action="tracker-back">←</button><strong>${food?'Lacak Makanan':'Lacak Paket'}</strong><button class="icon-button" data-action="close-panel">×</button></div><div class="tracker-detail-hero"><span>${progress.completed?'✅':food?'🛵':'🚚'}</span><small>${orderCode(order)}</small><h2>${orderStatus(order)}</h2><p>${progress.steps[progress.active][1]}</p><b>${orderEta(order)}</b></div>${food ? `<div class="food-map-sim"><span class="map-store">🍜</span><span class="map-driver" style="left:${18 + progress.active * 12}%">🛵</span><span class="map-home">🏠</span><i class="map-road road-a"></i><i class="map-road road-b"></i><small>Peta simulasi · bukan lokasi nyata</small></div>` : `<div class="goods-route"><span>🏬 Penjual</span><i></i><span>📦 Sortir</span><i></i><span>🏠 Kamu</span></div>`}<div class="tracker-order-summary"><div><span>${meta.icon}</span><div><small>${meta.label}</small><strong>${order.items || 0} item</strong></div></div><strong>${currency.format(order.amount)}</strong></div><div class="tracker-timeline">${progress.steps.map((step,index)=>`<div class="tracker-step ${index<progress.active?'done':index===progress.active?'current':''}"><div class="tracker-step-dot">${index<progress.active?'✓':index===progress.active?'●':''}</div><div><strong>${step[0]}</strong><p>${step[1]}</p></div></div>`).join('')}</div><div class="tracker-disclaimer">${food?'Alur dibuat seperti tracker layanan food-delivery: restoran → driver → perjalanan → tiba.':'Alur dibuat seperti tracker marketplace: diproses → dikemas → kurir → sortir → diterima.'} Semua status sepenuhnya simulasi dan hanya tersimpan di device ini.</div></div></div>`
+}
+
 function renderPanel() {
+  if (panelOpen === 'orders') return renderOrderTracker()
   if (panelOpen === 'history') {
     const rows = state.transactionHistory.length ? state.transactionHistory.map(tx => { const dt = new Date(tx.date); return `<div class="history-row"><div><span>${storeInfo(tx.store).icon}</span><div><strong>${storeInfo(tx.store).label}</strong><small>${dt.toLocaleDateString('id-ID')} · ${dt.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}</small></div></div><div><strong>${currency.format(tx.amount)}</strong><small>${tx.items} item</small></div></div>` }).join('') : `<div class="panel-empty">Belum ada fake checkout.</div>`
     return `<div class="overlay modal-overlay" data-action="close-panel-bg"><div class="panel-modal"><button class="icon-button" data-action="close-panel">×</button><span class="eyebrow dark">LOCAL HISTORY</span><h2>🧾 Riwayat Kalap</h2><p>50 fake checkout terakhir di device ini.</p><div class="history-list">${rows}</div></div></div>`
@@ -244,9 +321,9 @@ function spendWallet() {
 
 document.addEventListener('click', event => {
   const button=event.target.closest('[data-action]'); if(!button)return; const action=button.dataset.action
-  if(action==='switch-store'){ state.activeStore=button.dataset.store; state.query=''; state.visibleCount=20; cartOpen=false; checkoutStage=null; panelOpen=null; render(); return }
+  if(action==='switch-store'){ state.activeStore=button.dataset.store; state.query=''; state.visibleCount=20; cartOpen=false; checkoutStage=null; panelOpen=null; selectedOrderId=null; render(); return }
   if(action==='add'){ addProduct(button.dataset.id); return }
-  if(action==='open-cart'){ cartOpen=true; checkoutStage=null; panelOpen=null; render(); return }
+  if(action==='open-cart'){ cartOpen=true; checkoutStage=null; panelOpen=null; selectedOrderId=null; render(); return }
   if(action==='close-cart'){ cartOpen=false; render(); return }
   if(action==='close-cart-bg'){ if(event.target===button){cartOpen=false;render()} return }
   if(action==='qty'){ changeQty(button.dataset.id,Number(button.dataset.delta)); return }
@@ -256,14 +333,19 @@ document.addEventListener('click', event => {
   if(action==='close-checkout'){ closeCheckout(); return }
   if(action==='close-modal-bg'){ if(event.target===button)closeCheckout(); return }
   if(action==='spend-wallet'){ spendWallet(); return }
-  if(action==='open-history'){ panelOpen='history'; cartOpen=false; checkoutStage=null; render(); return }
-  if(action==='open-badges'){ panelOpen='badges'; cartOpen=false; checkoutStage=null; render(); return }
-  if(action==='close-panel'){ panelOpen=null; render(); return }
-  if(action==='close-panel-bg'){ if(event.target===button){panelOpen=null;render()} }
+  if(action==='open-orders'){ panelOpen='orders'; trackerTab='food'; selectedOrderId=null; cartOpen=false; checkoutStage=null; render(); return }
+  if(action==='open-history'){ panelOpen='history'; selectedOrderId=null; cartOpen=false; checkoutStage=null; render(); return }
+  if(action==='open-badges'){ panelOpen='badges'; selectedOrderId=null; cartOpen=false; checkoutStage=null; render(); return }
+  if(action==='tracker-tab'){ trackerTab=button.dataset.tab==='goods'?'goods':'food'; selectedOrderId=null; render(); return }
+  if(action==='tracker-detail'){ selectedOrderId=button.dataset.id; render(); return }
+  if(action==='tracker-back'){ selectedOrderId=null; render(); return }
+  if(action==='close-panel'){ panelOpen=null; selectedOrderId=null; render(); return }
+  if(action==='close-panel-bg'){ if(event.target===button){panelOpen=null;selectedOrderId=null;render()} }
 })
 
-document.addEventListener('keydown', event => { if(event.key!=='Escape')return; if(checkoutStage&&checkoutStage!=='processing'){closeCheckout();return} if(panelOpen){panelOpen=null;render();return} if(cartOpen){cartOpen=false;render()} })
+document.addEventListener('keydown', event => { if(event.key!=='Escape')return; if(checkoutStage&&checkoutStage!=='processing'){closeCheckout();return} if(panelOpen){panelOpen=null;selectedOrderId=null;render();return} if(cartOpen){cartOpen=false;render()} })
 document.addEventListener('error', event => { const image=event.target; if(!(image instanceof HTMLImageElement)||!image.matches('[data-product-image]')||image.dataset.fallbackApplied)return; image.dataset.fallbackApplied='true'; image.src=fallbackImage }, true)
-setInterval(()=>{ if(resetDailyIfNeeded()){ checkoutStage=null; panelOpen=null; cartOpen=false; render(); showToast(`Saldo reset jadi ${currency.format(DAILY_WALLET)}`); return } updateCountdown() },1000)
+setInterval(()=>{ if(resetDailyIfNeeded()){ checkoutStage=null; panelOpen=null; selectedOrderId=null; cartOpen=false; render(); showToast(`Saldo reset jadi ${currency.format(DAILY_WALLET)}`); return } updateCountdown() },1000)
+setInterval(()=>{ if(panelOpen==='orders') render() },5000)
 
 evaluateAchievements(); persist(); render()
