@@ -1,0 +1,441 @@
+/* KALAP! v1.2 final mobile sheet patch
+   Keeps bottom navigation out of transaction flows and gives cart/checkout/tracker
+   a predictable iOS-style bottom-sheet layout. */
+
+@media (max-width: 760px) {
+  :root {
+    --sheet-radius: 28px;
+    --sheet-pad-x: 18px;
+    --sheet-safe-bottom: calc(18px + env(safe-area-inset-bottom));
+  }
+
+  body {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.modal-open {
+    overflow: hidden !important;
+    overscroll-behavior: none;
+  }
+
+  /* Bottom tab bar: compact, consistent, never overlaps an open sheet. */
+  .kalap-bottom-nav {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    min-height: 70px !important;
+    padding: 7px 8px !important;
+    border-radius: 22px !important;
+    border: 1px solid rgba(30,24,21,.09) !important;
+    box-shadow: 0 12px 34px rgba(25,22,20,.15) !important;
+    background: rgba(255,255,255,.97) !important;
+    transition: opacity .18s ease, transform .2s ease !important;
+  }
+
+  .kalap-bottom-nav button {
+    min-height: 54px !important;
+    border-radius: 15px !important;
+    padding: 6px 2px !important;
+  }
+
+  .kalap-bottom-nav button > span {
+    font-size: 20px !important;
+  }
+
+  .kalap-bottom-nav small {
+    font-size: 10px !important;
+    line-height: 1.05 !important;
+  }
+
+  .kalap-bottom-nav b {
+    top: 1px !important;
+    right: 16% !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    border: 2px solid #fff !important;
+  }
+
+  body.modal-open .kalap-bottom-nav {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(calc(100% + 32px)) !important;
+  }
+
+  /* Every transaction surface behaves as a sheet, not a full-height page. */
+  .overlay,
+  .v2-overlay {
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    background: rgba(18,15,13,.48) !important;
+    backdrop-filter: blur(7px) !important;
+    -webkit-backdrop-filter: blur(7px) !important;
+    z-index: 230 !important;
+  }
+
+  .cart-drawer,
+  .checkout-modal,
+  .panel-modal,
+  .panel-modal.order-panel,
+  .v2-sheet {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: 88dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: var(--sheet-radius) var(--sheet-radius) 0 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    color: #211d1b !important;
+    box-shadow: 0 -16px 52px rgba(21,17,15,.22) !important;
+  }
+
+  .checkout-modal,
+  .panel-modal,
+  .v2-sheet {
+    position: relative !important;
+  }
+
+  /* Cart gets its own three-zone layout: header / scroll area / checkout footer. */
+  .cart-drawer {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: min(72dvh, 650px) !important;
+  }
+
+  .drawer-head {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    padding: 20px var(--sheet-pad-x) 13px !important;
+    margin: 0 !important;
+    background: #fff !important;
+    border-bottom: 1px solid #f0ebe8 !important;
+  }
+
+  .drawer-head::before,
+  .panel-modal::before,
+  .checkout-modal::before,
+  .v2-sheet::before {
+    content: '';
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 38px;
+    height: 4px;
+    border-radius: 999px;
+    background: #ded8d4;
+    transform: translateX(-50%);
+  }
+
+  .drawer-head h2 {
+    margin: 5px 0 0 !important;
+    font-size: 22px !important;
+    letter-spacing: -.6px !important;
+  }
+
+  .drawer-head .eyebrow {
+    font-size: 9px !important;
+    letter-spacing: 1.45px !important;
+  }
+
+  .icon-button,
+  .drawer-head .icon-button,
+  .checkout-modal > .icon-button,
+  .panel-modal > .icon-button,
+  .v2-sheet-head > button {
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    border-radius: 50% !important;
+    background: #f2efed !important;
+    color: #282321 !important;
+    font-size: 20px !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+  }
+
+  .drawer-head .icon-button {
+    position: static !important;
+  }
+
+  .checkout-modal > .icon-button,
+  .panel-modal > .icon-button {
+    top: 16px !important;
+    right: 16px !important;
+    z-index: 6 !important;
+  }
+
+  .drawer-note {
+    flex: 0 0 auto !important;
+    margin: 12px var(--sheet-pad-x) 6px !important;
+    padding: 12px 14px !important;
+    border-radius: 15px !important;
+    background: #fff4ef !important;
+    color: #844238 !important;
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+  }
+
+  .cart-lines {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px var(--sheet-pad-x) 12px !important;
+  }
+
+  .cart-line {
+    grid-template-columns: 68px minmax(0,1fr) !important;
+    grid-template-areas:
+      'image copy'
+      'image qty' !important;
+    column-gap: 12px !important;
+    row-gap: 8px !important;
+    align-items: center !important;
+    padding: 15px 0 !important;
+    border-bottom: 1px solid #f0ece9 !important;
+  }
+
+  .cart-line > a {
+    grid-area: image !important;
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 15px !important;
+    overflow: hidden !important;
+    align-self: start !important;
+  }
+
+  .cart-line > a img,
+  .cart-line img {
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 15px !important;
+    object-fit: cover !important;
+  }
+
+  .line-copy {
+    grid-area: copy !important;
+    min-width: 0 !important;
+    gap: 4px !important;
+  }
+
+  .line-copy strong {
+    font-size: 14px !important;
+    line-height: 1.32 !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+  }
+
+  .line-copy span {
+    font-size: 13px !important;
+    color: #8d8580 !important;
+  }
+
+  .qty-control {
+    grid-area: qty !important;
+    justify-self: start !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+  }
+
+  .qty-control button {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+    border: 1px solid #ddd6d1 !important;
+    background: #fff !important;
+    color: #24201e !important;
+    font-size: 17px !important;
+  }
+
+  .qty-control b {
+    min-width: 18px !important;
+    text-align: center !important;
+    font-size: 14px !important;
+  }
+
+  .empty-cart {
+    min-height: 42dvh !important;
+    height: auto !important;
+  }
+
+  .cart-summary {
+    position: relative !important;
+    flex: 0 0 auto !important;
+    padding: 15px var(--sheet-pad-x) var(--sheet-safe-bottom) !important;
+    margin: 0 !important;
+    background: #fff !important;
+    border-top: 1px solid #eee8e4 !important;
+    box-shadow: 0 -10px 26px rgba(31,25,22,.06) !important;
+  }
+
+  .cart-summary > div:first-child {
+    display: flex !important;
+    align-items: baseline !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding: 0 !important;
+    margin: 0 0 12px !important;
+    font-size: 15px !important;
+  }
+
+  .cart-summary > div:first-child strong {
+    font-size: 22px !important;
+    letter-spacing: -.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .cart-summary .modal-actions {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: .8fr 1.2fr !important;
+    gap: 9px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  .cart-summary .modal-actions button,
+  .checkout-modal .modal-actions button,
+  .tracker-detail-button,
+  .v2-share-receipt {
+    min-height: 50px !important;
+    border-radius: 15px !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+  }
+
+  .cart-summary .modal-actions .ghost {
+    background: #f3efec !important;
+    color: #2a2522 !important;
+  }
+
+  /* Checkout: compact centered content, CTA remains visible without the tab bar. */
+  .checkout-modal {
+    max-height: 86dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 26px var(--sheet-pad-x) var(--sheet-safe-bottom) !important;
+  }
+
+  .checkout-modal .big-emoji {
+    font-size: 42px !important;
+    margin-top: 4px !important;
+  }
+
+  .checkout-modal h2 {
+    font-size: 25px !important;
+    line-height: 1.08 !important;
+    margin: 7px 0 9px !important;
+  }
+
+  .checkout-modal > p {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 12px !important;
+  }
+
+  .checkout-wallet-breakdown {
+    margin: 14px 0 !important;
+  }
+
+  .checkout-modal .modal-actions {
+    position: static !important;
+    display: grid !important;
+    grid-template-columns: .8fr 1.2fr !important;
+    gap: 9px !important;
+    padding: 0 !important;
+    margin-top: 14px !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Tracker/history/badges/favorites/profile sheets. */
+  .panel-modal,
+  .v2-sheet {
+    max-height: 89dvh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 25px var(--sheet-pad-x) var(--sheet-safe-bottom) !important;
+  }
+
+  .panel-modal.order-panel {
+    padding-top: 24px !important;
+  }
+
+  .tracker-tabs {
+    position: sticky !important;
+    top: -25px !important;
+    z-index: 8 !important;
+    margin: 10px -2px 15px !important;
+    padding: 10px 2px !important;
+    background: rgba(255,255,255,.97) !important;
+    backdrop-filter: blur(12px) !important;
+  }
+
+  .tracker-tab {
+    min-height: 44px !important;
+    border-radius: 14px !important;
+  }
+
+  .tracker-order-card {
+    border-radius: 18px !important;
+    padding: 15px !important;
+  }
+
+  .tracker-status-row {
+    margin-top: 12px !important;
+  }
+
+  .tracker-detail-nav {
+    padding-top: 5px !important;
+  }
+
+  .food-map-sim {
+    height: 170px !important;
+  }
+
+  .v2-sheet-head {
+    margin-bottom: 16px !important;
+    padding-top: 4px !important;
+  }
+
+  .v2-sheet-head h2 {
+    font-size: 25px !important;
+  }
+
+  /* Prevent the mobile keyboard / safe-area from eating the last action. */
+  .modal-actions,
+  .cart-summary,
+  .panel-modal,
+  .v2-sheet,
+  .checkout-modal {
+    scroll-padding-bottom: calc(28px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 390px) {
+  .cart-summary > div:first-child strong {
+    font-size: 19px !important;
+  }
+
+  .cart-summary .modal-actions,
+  .checkout-modal .modal-actions {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-summary .modal-actions .ghost,
+  .checkout-modal .modal-actions .ghost {
+    order: 2;
+  }
+}
