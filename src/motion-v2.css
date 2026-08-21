@@ -1,0 +1,168 @@
+/* KALAP! V2 motion system — subtle, fast, mobile-first */
+:root {
+  --motion-fast: 160ms;
+  --motion-base: 220ms;
+  --motion-slow: 320ms;
+  --motion-ease: cubic-bezier(.22,.8,.28,1);
+}
+
+html { scroll-behavior: smooth; }
+
+/* Main content changes */
+.marketplace,
+.store-switcher-wrap,
+.v2-hub,
+.v2-recommendations,
+.daily-strip,
+.v11-grid {
+  will-change: opacity, transform;
+}
+
+.motion-enter {
+  animation: kalapContentIn var(--motion-base) var(--motion-ease) both;
+}
+
+.motion-soft-enter {
+  animation: kalapSoftIn var(--motion-fast) var(--motion-ease) both;
+}
+
+.motion-leave {
+  opacity: .6 !important;
+  transform: translateY(4px) scale(.997) !important;
+  transition: opacity 110ms ease, transform 110ms ease !important;
+}
+
+@keyframes kalapContentIn {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes kalapSoftIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Category tab feedback */
+.store-tab {
+  transition: background-color var(--motion-fast) ease, color var(--motion-fast) ease,
+    border-color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease),
+    box-shadow var(--motion-fast) ease !important;
+}
+.store-tab:active { transform: scale(.97) !important; }
+
+/* Cards feel more app-like without being floaty */
+.product-card {
+  transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast) ease,
+    border-color var(--motion-fast) ease !important;
+}
+.product-card:active { transform: scale(.985); }
+
+.favorite-button,
+.product-body button,
+.cart-button,
+.order-button,
+.utility-button,
+.v12-sort button,
+.pd-add,
+.tracker-detail-button {
+  transition: transform 120ms var(--motion-ease), opacity 120ms ease, background-color 160ms ease,
+    color 160ms ease, box-shadow 160ms ease !important;
+}
+.favorite-button:active,
+.product-body button:active,
+.cart-button:active,
+.order-button:active,
+.utility-button:active,
+.v12-sort button:active,
+.pd-add:active,
+.tracker-detail-button:active { transform: scale(.96); }
+
+/* Core app overlays */
+.overlay,
+.v2-overlay,
+.product-detail-overlay,
+.order-action-overlay {
+  animation: kalapBackdropIn var(--motion-fast) ease both;
+}
+
+.cart-drawer,
+.checkout-modal,
+.panel-modal,
+.v2-sheet,
+.product-detail-sheet,
+.order-action-sheet {
+  transform-origin: bottom center;
+  animation: kalapSheetIn var(--motion-base) var(--motion-ease) both;
+}
+
+@keyframes kalapBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes kalapSheetIn {
+  from { opacity: 0; transform: translateY(22px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Order removal now visually tracks the data mutation */
+.tracker-order-card {
+  transition: opacity 180ms ease, transform 180ms var(--motion-ease), max-height 200ms ease,
+    margin 200ms ease, padding 200ms ease, border-width 200ms ease !important;
+  transform-origin: center top;
+}
+.tracker-order-card.order-removing {
+  opacity: 0 !important;
+  transform: translateX(18px) scale(.985) !important;
+  pointer-events: none !important;
+}
+
+/* Tracker tab switch */
+.tracker-list.motion-tab-enter {
+  animation: kalapTabIn 180ms var(--motion-ease) both;
+}
+@keyframes kalapTabIn {
+  from { opacity: 0; transform: translateX(8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Bottom nav state */
+.kalap-bottom-nav button,
+.kalap-bottom-nav .nav-icon-shell,
+.kalap-bottom-nav .nav-label {
+  transition: color 170ms ease, background-color 170ms ease, transform 170ms var(--motion-ease),
+    opacity 170ms ease !important;
+}
+.kalap-bottom-nav button:active { transform: scale(.94); }
+.kalap-bottom-nav button.active .nav-icon-shell { transform: translateY(-1px) scale(1.04); }
+
+/* Product detail sections cascade slightly */
+.product-detail-overlay .pd-image,
+.product-detail-overlay .pd-main-info,
+.product-detail-overlay .pd-section {
+  animation: kalapSoftIn 220ms var(--motion-ease) both;
+}
+.product-detail-overlay .pd-main-info { animation-delay: 35ms; }
+.product-detail-overlay .pd-section:nth-of-type(2) { animation-delay: 60ms; }
+.product-detail-overlay .pd-section:nth-of-type(3) { animation-delay: 85ms; }
+
+/* Toasts */
+.v2-toast,
+.order-mgmt-toast,
+.toast {
+  animation: kalapToastIn 180ms var(--motion-ease) both;
+}
+@keyframes kalapToastIn {
+  from { opacity: 0; transform: translate(-50%, 8px) scale(.96); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+/* Reduce animation when requested by the OS. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .001ms !important;
+  }
+}
