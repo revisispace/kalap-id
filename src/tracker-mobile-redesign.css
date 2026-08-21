@@ -1,0 +1,400 @@
+/* KALAP! v1.2 — Mobile order tracker redesign
+   Purpose: compact hierarchy, readable status cards, and a guaranteed scroll area. */
+
+@media (max-width: 760px) {
+  /* LIST SHEET ------------------------------------------------------------ */
+  .panel-modal.order-panel:not(.order-detail) {
+    height: 78dvh !important;
+    max-height: 78dvh !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    border-radius: 26px 26px 0 0 !important;
+    background: #fbfbfb !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) > .icon-button {
+    position: absolute !important;
+    top: 18px !important;
+    right: 16px !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    z-index: 12 !important;
+    background: #f1f1f1 !important;
+    color: #262321 !important;
+    font-size: 19px !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) > .eyebrow {
+    flex: 0 0 auto !important;
+    margin: 25px 58px 0 18px !important;
+    color: #ee654d !important;
+    font-size: 9px !important;
+    line-height: 1 !important;
+    letter-spacing: 1.45px !important;
+    font-weight: 900 !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) > h2 {
+    flex: 0 0 auto !important;
+    margin: 6px 58px 0 18px !important;
+    color: #211f1d !important;
+    font-size: 27px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -1px !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) > p {
+    flex: 0 0 auto !important;
+    margin: 7px 54px 0 18px !important;
+    color: #817b77 !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Segmented control remains fixed above the scrolling order list. */
+  .panel-modal.order-panel:not(.order-detail) .tracker-tabs {
+    position: relative !important;
+    top: auto !important;
+    flex: 0 0 auto !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin: 15px 16px 10px !important;
+    padding: 4px !important;
+    border-radius: 16px !important;
+    background: #f0efee !important;
+    backdrop-filter: none !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) .tracker-tab {
+    min-height: 42px !important;
+    padding: 8px 10px !important;
+    border: 0 !important;
+    border-radius: 13px !important;
+    background: transparent !important;
+    color: #625d59 !important;
+    box-shadow: none !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) .tracker-tab b {
+    min-width: 20px !important;
+    height: 20px !important;
+    padding: 0 5px !important;
+    border-radius: 999px !important;
+    background: rgba(0,0,0,.06) !important;
+    color: inherit !important;
+    font-size: 9px !important;
+  }
+
+  .panel-modal.order-panel.food:not(.order-detail) .tracker-tab.food.active {
+    background: #13a66f !important;
+    color: #fff !important;
+  }
+
+  .panel-modal.order-panel.goods:not(.order-detail) .tracker-tab.goods.active {
+    background: #ee4d2d !important;
+    color: #fff !important;
+  }
+
+  .panel-modal.order-panel:not(.order-detail) .tracker-tab.active b {
+    background: rgba(255,255,255,.22) !important;
+    color: #fff !important;
+  }
+
+  /* This is the only scrolling region on the list screen. */
+  .panel-modal.order-panel:not(.order-detail) .tracker-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    padding: 2px 14px calc(18px + env(safe-area-inset-bottom)) !important;
+    background: #fbfbfb !important;
+  }
+
+  /* ORDER CARD ------------------------------------------------------------ */
+  .panel-modal.order-panel .tracker-order-card {
+    margin: 0 0 10px !important;
+    padding: 14px !important;
+    border: 1px solid #e9e7e5 !important;
+    border-radius: 18px !important;
+    background: #fff !important;
+    box-shadow: 0 4px 14px rgba(23,20,18,.045) !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-top {
+    display: grid !important;
+    grid-template-columns: 48px minmax(0,1fr) auto !important;
+    gap: 10px !important;
+    align-items: center !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-icon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 14px !important;
+    background: #f4f1ef !important;
+    font-size: 23px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-top > div:nth-child(2) {
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 1px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-top > div:nth-child(2) > small {
+    color: #96908c !important;
+    font-size: 9px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-top > div:nth-child(2) > strong {
+    color: #24211f !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-top > div:nth-child(2) > span {
+    color: #938c88 !important;
+    font-size: 10px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-price {
+    grid-column: auto !important;
+    text-align: right !important;
+    display: grid !important;
+    gap: 1px !important;
+    white-space: nowrap !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-price strong {
+    color: #24211f !important;
+    font-size: 13px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-price small {
+    color: #99918d !important;
+    font-size: 9px !important;
+  }
+
+  /* Status should read like a status pill/card, not a giant dark banner. */
+  .panel-modal.order-panel .tracker-status-row {
+    min-height: 0 !important;
+    margin: 12px 0 0 !important;
+    padding: 10px 11px !important;
+    border: 1px solid transparent !important;
+    border-radius: 13px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 9px !important;
+  }
+
+  .panel-modal.order-panel .food-order .tracker-status-row {
+    background: #eef9f4 !important;
+    border-color: #d9f0e6 !important;
+  }
+
+  .panel-modal.order-panel .goods-order .tracker-status-row {
+    background: #fff3ef !important;
+    border-color: #f8ded6 !important;
+  }
+
+  .panel-modal.order-panel .tracker-status-row > div:first-child {
+    display: grid !important;
+    gap: 1px !important;
+    min-width: 0 !important;
+  }
+
+  .panel-modal.order-panel .tracker-status-row small {
+    color: #8e8884 !important;
+    font-size: 9px !important;
+  }
+
+  .panel-modal.order-panel .tracker-status-row strong {
+    color: #252220 !important;
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+  }
+
+  .panel-modal.order-panel .tracker-status-row span {
+    color: #746e6a !important;
+    font-size: 10px !important;
+  }
+
+  .panel-modal.order-panel .tracker-status-icon {
+    margin-left: auto !important;
+    font-size: 24px !important;
+    line-height: 1 !important;
+  }
+
+  .panel-modal.order-panel .tracker-mini-progress {
+    height: 4px !important;
+    margin: 10px 1px !important;
+    background: #ece9e7 !important;
+  }
+
+  .panel-modal.order-panel .food-order .tracker-mini-progress i {
+    background: #13a66f !important;
+  }
+
+  .panel-modal.order-panel .goods-order .tracker-mini-progress i {
+    background: #ee4d2d !important;
+  }
+
+  .panel-modal.order-panel .tracker-detail-button {
+    min-height: 42px !important;
+    height: 42px !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 13px !important;
+    font-size: 12px !important;
+    font-weight: 800 !important;
+  }
+
+  .panel-modal.order-panel .food-order .tracker-detail-button {
+    background: #13a66f !important;
+    color: #fff !important;
+  }
+
+  .panel-modal.order-panel .goods-order .tracker-detail-button {
+    background: #ee4d2d !important;
+    color: #fff !important;
+  }
+
+  .panel-modal.order-panel .tracker-empty {
+    min-height: 100% !important;
+    padding: 30px 18px !important;
+  }
+
+  /* DETAIL SHEET ---------------------------------------------------------- */
+  .panel-modal.order-panel.order-detail {
+    height: 84dvh !important;
+    max-height: 84dvh !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    padding: 0 16px calc(20px + env(safe-area-inset-bottom)) !important;
+    background: #fbfbfb !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-nav {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 10 !important;
+    min-height: 58px !important;
+    margin: 0 -16px !important;
+    padding: 12px 16px 8px !important;
+    background: rgba(251,251,251,.96) !important;
+    backdrop-filter: blur(12px) !important;
+    border-bottom: 1px solid #efedeb !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-nav > strong {
+    font-size: 14px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-back,
+  .panel-modal.order-panel.order-detail .icon-button {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    background: #efedeb !important;
+    color: #282421 !important;
+    border: 0 !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-hero {
+    padding: 18px 4px 14px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-hero > span {
+    font-size: 38px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-hero h2 {
+    margin: 5px 0 4px !important;
+    font-size: 24px !important;
+    line-height: 1.1 !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-hero p {
+    font-size: 12px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-detail-hero > b {
+    display: inline-flex !important;
+    margin-top: 9px !important;
+    padding: 7px 10px !important;
+    border-radius: 999px !important;
+    font-size: 10px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .food-map-sim {
+    height: 150px !important;
+    margin: 0 0 12px !important;
+    border-radius: 17px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .goods-route {
+    margin: 0 0 12px !important;
+    padding: 14px 10px !important;
+    border-radius: 16px !important;
+    background: #fff4ef !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-order-summary {
+    margin: 0 0 14px !important;
+    padding: 12px !important;
+    border-radius: 15px !important;
+    background: #fff !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-step {
+    min-height: 65px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-step strong {
+    font-size: 12px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-step p {
+    font-size: 10px !important;
+  }
+
+  .panel-modal.order-panel.order-detail .tracker-disclaimer {
+    margin-bottom: 6px !important;
+    padding: 11px !important;
+    border-radius: 13px !important;
+    font-size: 10px !important;
+    background: #f0eeec !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .panel-modal.order-panel .tracker-order-top {
+    grid-template-columns: 44px minmax(0,1fr) !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .panel-modal.order-panel .tracker-order-price {
+    grid-column: 2 !important;
+    text-align: left !important;
+    margin-top: 2px !important;
+  }
+}
