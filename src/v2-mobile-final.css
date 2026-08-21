@@ -1,0 +1,355 @@
+/* KALAP! V2 — final mobile sheet system
+   Uses coarse-pointer fallback so iPhone/in-app browsers still get mobile UI
+   even when their reported CSS viewport is unexpectedly wide. */
+
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  /* Overlay must behave as a true bottom sheet surface. */
+  #v2-overlay.v2-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 320 !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    background: rgba(16,13,11,.48) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  #v2-overlay .v2-sheet.v2full-sheet {
+    position: relative !important;
+    box-sizing: border-box !important;
+    width: 100vw !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
+    max-height: 86dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 26px 26px 0 0 !important;
+    overflow: hidden !important;
+    background: #fbfbfb !important;
+    color: #211e1c !important;
+    box-shadow: 0 -16px 50px rgba(23,19,17,.22) !important;
+  }
+
+  #v2-overlay .v2-sheet.v2full-sheet::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 7px !important;
+    left: 50% !important;
+    z-index: 20 !important;
+    width: 38px !important;
+    height: 4px !important;
+    border-radius: 999px !important;
+    background: #ddd8d4 !important;
+    transform: translateX(-50%) !important;
+  }
+
+  /* Generic header: compact, app-like, always visible. */
+  #v2-overlay .v2-sheet-head {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 15 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 23px 18px 14px !important;
+    background: rgba(251,251,251,.97) !important;
+    border-bottom: 1px solid #eeeae7 !important;
+    backdrop-filter: blur(14px) !important;
+    -webkit-backdrop-filter: blur(14px) !important;
+  }
+
+  #v2-overlay .v2-sheet-head > div {
+    min-width: 0 !important;
+  }
+
+  #v2-overlay .v2-sheet-head small {
+    color: #eb5a3d !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+    letter-spacing: .15em !important;
+    font-weight: 900 !important;
+  }
+
+  #v2-overlay .v2-sheet-head h2 {
+    margin: 5px 0 3px !important;
+    color: #201d1b !important;
+    font-size: 22px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -.65px !important;
+  }
+
+  #v2-overlay .v2-sheet-head p {
+    margin: 0 !important;
+    color: #817a76 !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+  }
+
+  #v2-overlay .v2-sheet-head > button {
+    flex: 0 0 auto !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: #efedeb !important;
+    color: #292523 !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
+  }
+
+  /* Generic content surfaces scroll vertically. */
+  #v2-overlay .flash-grid,
+  #v2-overlay .v2-voucher-list,
+  #v2-overlay .mission-list,
+  #v2-overlay .reward-grid,
+  #v2-overlay .leader-list,
+  #v2-overlay .favorite-list,
+  #v2-overlay .mystery-box-card,
+  #v2-overlay .profile-hero {
+    scroll-margin-top: 78px !important;
+  }
+
+  /* FAVORITES ----------------------------------------------------------- */
+  #v2-overlay.favorites-mode .v2-sheet {
+    height: 76dvh !important;
+    max-height: 76dvh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  #v2-overlay.favorites-mode .favorite-list {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    padding: 12px 14px calc(20px + env(safe-area-inset-bottom)) !important;
+    display: grid !important;
+    align-content: start !important;
+    gap: 9px !important;
+  }
+
+  #v2-overlay .favorite-row {
+    display: grid !important;
+    grid-template-columns: 58px minmax(0,1fr) auto !important;
+    grid-template-areas: 'img info actions' !important;
+    gap: 10px !important;
+    align-items: center !important;
+    min-width: 0 !important;
+    padding: 10px !important;
+    border: 1px solid #e8e4e1 !important;
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-shadow: 0 3px 10px rgba(30,25,22,.035) !important;
+  }
+
+  #v2-overlay .favorite-row > img {
+    grid-area: img !important;
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 13px !important;
+    object-fit: cover !important;
+  }
+
+  #v2-overlay .favorite-row > div:nth-child(2) {
+    grid-area: info !important;
+    min-width: 0 !important;
+    display: grid !important;
+    gap: 2px !important;
+  }
+
+  #v2-overlay .favorite-row small {
+    color: #918a86 !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+  }
+
+  #v2-overlay .favorite-row strong {
+    min-width: 0 !important;
+    color: #25211f !important;
+    font-size: 12px !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  #v2-overlay .favorite-row span {
+    color: #eb4e30 !important;
+    font-size: 11px !important;
+    font-weight: 900 !important;
+  }
+
+  #v2-overlay .favorite-actions {
+    grid-area: actions !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+  }
+
+  #v2-overlay .favorite-actions button {
+    width: auto !important;
+    min-width: 0 !important;
+    min-height: 34px !important;
+    padding: 0 10px !important;
+    border-radius: 10px !important;
+    background: #211e1c !important;
+    color: #fff !important;
+    font-size: 9px !important;
+    font-weight: 900 !important;
+  }
+
+  #v2-overlay .favorite-actions .remove {
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    background: #f2e9e5 !important;
+    color: #98584b !important;
+    font-size: 16px !important;
+  }
+
+  /* Other V2 sheets scroll as a single compact sheet. */
+  #v2-overlay.flash-mode .v2-sheet,
+  #v2-overlay.v2-voucher-mode .v2-sheet,
+  #v2-overlay.mission-mode .v2-sheet,
+  #v2-overlay.reward-shop-mode .v2-sheet,
+  #v2-overlay.leader-mode .v2-sheet,
+  #v2-overlay.mystery-mode .v2-sheet,
+  #v2-overlay.profile-mode .v2-sheet {
+    height: auto !important;
+    max-height: 84dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-y: contain !important;
+    touch-action: pan-y !important;
+    padding: 0 14px calc(20px + env(safe-area-inset-bottom)) !important;
+  }
+
+  #v2-overlay.flash-mode .v2-sheet-head,
+  #v2-overlay.v2-voucher-mode .v2-sheet-head,
+  #v2-overlay.mission-mode .v2-sheet-head,
+  #v2-overlay.reward-shop-mode .v2-sheet-head,
+  #v2-overlay.leader-mode .v2-sheet-head,
+  #v2-overlay.mystery-mode .v2-sheet-head,
+  #v2-overlay.profile-mode .v2-sheet-head {
+    margin: 0 -14px 12px !important;
+    width: calc(100% + 28px) !important;
+  }
+
+  /* Flash products */
+  #v2-overlay .flash-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    gap: 8px !important;
+  }
+
+  #v2-overlay .flash-product {
+    min-width: 0 !important;
+    border-radius: 15px !important;
+  }
+
+  #v2-overlay .flash-product > strong {
+    min-height: 0 !important;
+    font-size: 10px !important;
+  }
+
+  /* Voucher */
+  #v2-overlay .v2-voucher {
+    grid-template-columns: 36px minmax(0,1fr) auto !important;
+    gap: 9px !important;
+    padding: 11px !important;
+    border-radius: 14px !important;
+  }
+
+  #v2-overlay .v2-voucher > span { font-size: 22px !important; }
+  #v2-overlay .v2-voucher strong { font-size: 11px !important; }
+  #v2-overlay .v2-voucher p { font-size: 9px !important; }
+  #v2-overlay .v2-voucher button { grid-column: auto !important; font-size: 9px !important; padding: 8px 9px !important; }
+
+  /* Missions */
+  #v2-overlay .mission-card {
+    grid-template-columns: 34px minmax(0,1fr) auto !important;
+    padding: 10px !important;
+    border-radius: 14px !important;
+  }
+
+  #v2-overlay .mission-card > span { font-size: 20px !important; }
+  #v2-overlay .mission-card strong { font-size: 11px !important; }
+
+  /* Reward shop */
+  #v2-overlay .reward-grid { grid-template-columns: 1fr !important; }
+  #v2-overlay .reward-item { padding: 12px !important; border-radius: 15px !important; }
+
+  /* Mystery */
+  #v2-overlay .mystery-box-card {
+    display: grid !important;
+    grid-template-columns: 86px minmax(0,1fr) !important;
+    gap: 12px !important;
+    margin-top: 4px !important;
+    padding: 13px !important;
+    border-radius: 18px !important;
+  }
+
+  #v2-overlay .mystery-visual {
+    width: 86px !important;
+    height: 86px !important;
+    margin: 0 !important;
+    border-radius: 17px !important;
+    font-size: 38px !important;
+  }
+
+  /* Profile */
+  #v2-overlay.profile-mode .profile-hero {
+    margin-top: 3px !important;
+    padding: 13px !important;
+    border-radius: 16px !important;
+  }
+
+  #v2-overlay.profile-mode .profile-avatar {
+    width: 52px !important;
+    height: 52px !important;
+    border-radius: 16px !important;
+    font-size: 19px !important;
+  }
+
+  #v2-overlay.profile-mode .profile-hero h3 { font-size: 17px !important; }
+  #v2-overlay.profile-mode .profile-stats > div { padding: 11px !important; border-radius: 13px !important; }
+  #v2-overlay.profile-mode .profile-stats strong { font-size: 14px !important; }
+  #v2-overlay.profile-mode .profile-shortcuts button { min-height: 40px !important; }
+
+  /* Empty state */
+  #v2-overlay .v2-empty {
+    min-height: 45dvh !important;
+    padding: 30px 18px !important;
+  }
+}
+
+@media (max-width: 390px) {
+  #v2-overlay .favorite-row {
+    grid-template-columns: 54px minmax(0,1fr) !important;
+    grid-template-areas:
+      'img info'
+      'img actions' !important;
+  }
+
+  #v2-overlay .favorite-row > img { width:54px !important;height:54px !important; }
+  #v2-overlay .favorite-actions { justify-self:start !important; }
+  #v2-overlay .flash-grid { grid-template-columns:1fr !important; }
+  #v2-overlay .v2-voucher { grid-template-columns:34px minmax(0,1fr) !important; }
+  #v2-overlay .v2-voucher > button { grid-column:2 !important; width:max-content !important; }
+}
