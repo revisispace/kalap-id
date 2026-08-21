@@ -1,0 +1,266 @@
+/* KALAP! V2 — Premium floating dock */
+
+@media (max-width: 900px), (hover: none) and (pointer: coarse) {
+  body {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav {
+    --dock-bg: rgba(23, 19, 17, .92);
+    position: fixed !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    z-index: 210 !important;
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    min-height: 76px !important;
+    padding: 8px !important;
+    border: 1px solid rgba(255,255,255,.09) !important;
+    border-radius: 26px !important;
+    background:
+      radial-gradient(circle at 50% -30%, rgba(238,77,45,.16), transparent 44%),
+      linear-gradient(180deg, rgba(39,32,28,.96), var(--dock-bg)) !important;
+    box-shadow:
+      0 20px 48px rgba(10,8,7,.32),
+      0 5px 14px rgba(10,8,7,.18),
+      inset 0 1px 0 rgba(255,255,255,.07) !important;
+    backdrop-filter: blur(22px) saturate(145%) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(145%) !important;
+    overflow: visible !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    pointer-events: none;
+    border-radius: 25px;
+    background: linear-gradient(110deg, rgba(255,255,255,.055), transparent 27%, transparent 72%, rgba(238,77,45,.055));
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav] {
+    --tab-accent: #ee4d2d;
+    --tab-soft: rgba(238,77,45,.13);
+    position: relative !important;
+    min-width: 0 !important;
+    min-height: 60px !important;
+    padding: 5px 2px !important;
+    border: 0 !important;
+    border-radius: 18px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    background: transparent !important;
+    color: rgba(245,239,235,.58) !important;
+    transform: translateY(0) !important;
+    transition:
+      background .2s ease,
+      color .2s ease,
+      transform .2s cubic-bezier(.2,.8,.2,1),
+      box-shadow .2s ease !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="orders"] {
+    --tab-accent: #77a9d6;
+    --tab-soft: rgba(119,169,214,.13);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] {
+    --tab-accent: #f0b84d;
+    --tab-soft: rgba(240,184,77,.15);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="favorites"] {
+    --tab-accent: #ef7990;
+    --tab-soft: rgba(239,121,144,.14);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="profile"] {
+    --tab-accent: #d4b09a;
+    --tab-soft: rgba(212,176,154,.14);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-icon-shell {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    background: rgba(255,255,255,.055);
+    border: 1px solid rgba(255,255,255,.055);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+    color: rgba(255,255,255,.66);
+    transition: all .2s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-icon-shell svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-label {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 9px !important;
+    line-height: 1 !important;
+    font-weight: 750 !important;
+    letter-spacing: .005em;
+    color: inherit;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav].active {
+    background: linear-gradient(145deg, rgba(255,255,255,.085), rgba(255,255,255,.025)) !important;
+    color: #fff !important;
+    transform: translateY(-2px) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      0 7px 18px rgba(0,0,0,.13) !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav].active .nav-icon-shell {
+    color: #fff;
+    background: linear-gradient(145deg, var(--tab-accent), color-mix(in srgb, var(--tab-accent) 72%, #4e1b13));
+    border-color: rgba(255,255,255,.15);
+    box-shadow:
+      0 7px 18px color-mix(in srgb, var(--tab-accent) 30%, transparent),
+      inset 0 1px 0 rgba(255,255,255,.22);
+    transform: scale(1.04);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav].active::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 14px;
+    height: 2px;
+    border-radius: 99px;
+    background: var(--tab-accent);
+    box-shadow: 0 0 10px var(--tab-accent);
+  }
+
+  /* Rewards is the visual core of the dock. */
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] {
+    margin-top: -14px !important;
+    min-height: 72px !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] .nav-icon-shell {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    color: #fff4d7;
+    background:
+      radial-gradient(circle at 35% 28%, rgba(255,255,255,.18), transparent 26%),
+      linear-gradient(145deg, #6c4a2d, #32251d);
+    border: 1px solid rgba(240,184,77,.28);
+    box-shadow:
+      0 10px 26px rgba(0,0,0,.24),
+      inset 0 1px 0 rgba(255,255,255,.12);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] .nav-icon-shell::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    z-index: -1;
+    border-radius: 19px;
+    background: radial-gradient(circle, rgba(240,184,77,.2), transparent 68%);
+    opacity: .85;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"].active .nav-icon-shell {
+    background:
+      radial-gradient(circle at 35% 25%, rgba(255,255,255,.28), transparent 27%),
+      linear-gradient(145deg, #f3bd54, #d98724);
+    color: #281c0f;
+    box-shadow:
+      0 10px 28px rgba(240,184,77,.32),
+      inset 0 1px 0 rgba(255,255,255,.34);
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] .nav-label {
+    margin-top: -1px;
+    color: #e7cfad;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"].active .nav-label {
+    color: #fff2d7;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-badge,
+  .kalap-bottom-nav.v2-bottom-nav [data-order-count],
+  .kalap-bottom-nav.v2-bottom-nav [data-fav-count],
+  .kalap-bottom-nav.v2-bottom-nav [data-reward-dot] {
+    position: absolute !important;
+    top: 0 !important;
+    right: 13% !important;
+    z-index: 6 !important;
+    min-width: 18px !important;
+    height: 18px !important;
+    padding: 0 5px !important;
+    border: 2px solid #211c19 !important;
+    border-radius: 999px !important;
+    display: grid !important;
+    place-items: center !important;
+    background: #ee4d2d !important;
+    color: #fff !important;
+    font-size: 8px !important;
+    line-height: 1 !important;
+    font-weight: 900 !important;
+    box-shadow: 0 5px 12px rgba(0,0,0,.2) !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] [data-reward-dot] {
+    top: -8px !important;
+    right: 9% !important;
+    background: #f0b84d !important;
+    color: #281c0f !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav]:active {
+    transform: translateY(0) scale(.97) !important;
+  }
+
+  body.modal-open .kalap-bottom-nav.v2-bottom-nav,
+  body.product-detail-open .kalap-bottom-nav.v2-bottom-nav {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(calc(100% + 34px)) !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .kalap-bottom-nav.v2-bottom-nav {
+    left: 9px !important;
+    right: 9px !important;
+    gap: 2px !important;
+    padding: 7px !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-icon-shell {
+    width: 32px;
+    height: 32px;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav .nav-label {
+    font-size: 8px !important;
+  }
+
+  .kalap-bottom-nav.v2-bottom-nav button[data-v2-nav="rewards"] .nav-icon-shell {
+    width: 43px;
+    height: 43px;
+  }
+}
