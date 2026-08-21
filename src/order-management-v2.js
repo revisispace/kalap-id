@@ -37,6 +37,10 @@
     return Boolean(order && !order.cancelledAt && !isCompleted(order))
   }
 
+  function removableOrders() {
+    return orders().filter(order => order.cancelledAt || isCompleted(order))
+  }
+
   function currentTrackerTab() {
     return document.querySelector('[data-action="tracker-tab"].active')?.dataset.tab || 'food'
   }
@@ -101,15 +105,29 @@
     })
   }
 
+  function syncHistoryTools() {
+    const tools = document.querySelector('.order-history-tools')
+    if (!tools) return
+    const button = tools.querySelector('[data-clear-order-history]')
+    if (!button) return
+    const count = removableOrders().length
+    button.disabled = count === 0
+    button.textContent = count ? `Hapus riwayat selesai (${count})` : 'Tidak ada riwayat selesai'
+  }
+
   function renderEmptyStateIfNeeded() {
     const panel = document.querySelector('.panel-modal.order-panel:not(.order-detail)')
     const list = panel?.querySelector('.tracker-list')
     if (!list) return
+
     const tab = currentTrackerTab()
     const expected = orders().filter(order => tab === 'food' ? isFood(order) : !isFood(order))
     const visibleCards = list.querySelectorAll('.tracker-order-card:not(.order-removing)')
 
-    list.querySelector('.tracker-empty.order-managed-empty')?.remove()
+    // app.js can regenerate its own empty state every time the tracker re-renders.
+    // Normalize the list so exactly one empty state can ever exist.
+    list.querySelectorAll('.tracker-empty').forEach(empty => empty.remove())
+
     if (!expected.length && !visibleCards.length) {
       const empty = document.createElement('div')
       empty.className = 'tracker-empty order-managed-empty'
@@ -148,6 +166,7 @@
 
     updateTabCounts()
     renderEmptyStateIfNeeded()
+    syncHistoryTools()
     syncHeaderBadge()
   }
 
@@ -163,6 +182,7 @@
       if (String(cardOrderId(card)) === String(id)) removeCard(card, true)
     })
     updateTabCounts()
+    syncHistoryTools()
     syncHeaderBadge()
     window.setTimeout(renderEmptyStateIfNeeded, 190)
     toast('Riwayat pesanan dihapus')
@@ -196,6 +216,7 @@
       if (removableIds.has(String(cardOrderId(card)))) removeCard(card, true)
     })
     updateTabCounts()
+    syncHistoryTools()
     syncHeaderBadge()
     window.setTimeout(renderEmptyStateIfNeeded, 190)
     toast(`${removable.length} riwayat pesanan dihapus`)
@@ -228,13 +249,18 @@
   }
 
   function addHistoryTools(panel) {
-    if (!panel || panel.querySelector('.order-history-tools')) return
+    if (!panel) return
     const tabs = panel.querySelector('.tracker-tabs')
     if (!tabs) return
-    const tools = document.createElement('div')
-    tools.className = 'order-history-tools'
-    tools.innerHTML = `<span>Kelola pesanan di device ini</span><button type="button" data-clear-order-history>Hapus riwayat selesai</button>`
-    tabs.insertAdjacentElement('afterend', tools)
+
+    let tools = panel.querySelector('.order-history-tools')
+    if (!tools) {
+      tools = document.createElement('div')
+      tools.className = 'order-history-tools'
+      tools.innerHTML = `<span>Kelola pesanan di device ini</span><button type="button" data-clear-order-history>Hapus riwayat selesai</button>`
+      tabs.insertAdjacentElement('afterend', tools)
+    }
+    syncHistoryTools()
   }
 
   function markCancelledCard(card, order) {
@@ -313,9 +339,11 @@
       return
     }
 
-    if (event.target.closest('[data-clear-order-history]')) {
+    const clearButton = event.target.closest('[data-clear-order-history]')
+    if (clearButton) {
       event.preventDefault()
-      const count = orders().filter(order => order.cancelledAt || isCompleted(order)).length
+      if (clearButton.disabled) return
+      const count = removableOrders().length
       if (!count) {
         toast('Belum ada riwayat selesai untuk dihapus')
         return
