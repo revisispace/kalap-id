@@ -1,0 +1,95 @@
+/* KALAP! V2.2 — Desktop dialog behavior
+   Desktop uses a conventional centered dialog. Mobile retains bottom-sheet behavior. */
+
+@media (min-width: 900px) {
+  #v21-checkout-overlay.v21-overlay {
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 40px !important;
+    box-sizing: border-box !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet {
+    width: min(720px, calc(100vw - 80px)) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - 80px) !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    box-shadow: 0 28px 90px rgba(0,0,0,.30) !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > header {
+    flex: 0 0 62px !important;
+    min-height: 62px !important;
+    border-radius: 24px 24px 0 0 !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-scroll {
+    flex: 0 1 auto !important;
+    min-height: 0 !important;
+    max-height: calc(100dvh - 80px - 62px - 82px) !important;
+    overflow-y: auto !important;
+    padding: 16px 18px 18px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-card {
+    padding: 16px !important;
+    margin-bottom: 11px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > footer {
+    position: relative !important;
+    bottom: auto !important;
+    flex: 0 0 82px !important;
+    min-height: 82px !important;
+    border-radius: 0 0 24px 24px !important;
+    padding: 14px 18px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > footer button {
+    min-width: 210px !important;
+    min-height: 52px !important;
+  }
+
+  /* Prevent native/browser blue selection visuals from leaking into branded state. */
+  #v21-checkout-overlay .v21-delivery-options button,
+  #v21-checkout-overlay .v21-delivery-options button:hover,
+  #v21-checkout-overlay .v21-delivery-options button:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  #v21-checkout-overlay .v21-delivery-options button.active {
+    border-color: var(--checkout-accent, #ee4d2d) !important;
+    background: var(--checkout-accent-soft, #fff3ef) !important;
+    box-shadow: 0 0 0 1px var(--checkout-accent, #ee4d2d) inset !important;
+  }
+
+  #v21-checkout-overlay .v21-delivery-options button:focus-visible {
+    outline: 3px solid rgba(238,77,45,.22) !important;
+    outline-offset: 2px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #v21-checkout-overlay .v21-checkout-sheet {
+    width: 700px !important;
+  }
+}
+
+/* Mobile remains an intentional bottom sheet. */
+@media (max-width: 899px) {
+  #v21-checkout-overlay.v21-overlay {
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding: 0 !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet {
+    width: 100vw !important;
+    height: 90dvh !important;
+    max-height: 90dvh !important;
+    border-radius: 26px 26px 0 0 !important;
+  }
+}
