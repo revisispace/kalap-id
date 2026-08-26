@@ -1,7 +1,7 @@
 (() => {
   const CORE_KEY = 'kalap-v1'
   const CONTEXT_KEY = 'kalap-v22-checkout-context'
-  let handoffActive = false
+  let paymentActive = false
 
   function readCore() {
     try { return JSON.parse(localStorage.getItem(CORE_KEY) || '{}') }
@@ -12,6 +12,13 @@
     return Number(String(text).replace(/[^0-9]/g, '')) || 0
   }
 
+  function checkoutTotal(overlay) {
+    return parseMoney(
+      overlay.querySelector('.v21-checkout-sheet > footer strong')?.textContent ||
+      overlay.querySelector('.v21-summary .total b')?.textContent || ''
+    )
+  }
+
   function saveCheckoutContext(overlay) {
     const activeStore = document.querySelector('.store-tab.active')?.dataset.store || 'makanan'
     const delivery = overlay.querySelector('[data-v21-delivery].active')
@@ -19,10 +26,6 @@
       try { return JSON.parse(localStorage.getItem('kalap-v21-address') || 'null') }
       catch { return null }
     })()
-    const total = parseMoney(
-      overlay.querySelector('.v21-checkout-sheet > footer strong')?.textContent ||
-      overlay.querySelector('.v21-summary .total b')?.textContent || ''
-    )
 
     localStorage.setItem(CONTEXT_KEY, JSON.stringify({
       store: activeStore,
@@ -30,23 +33,35 @@
       deliveryLabel: delivery?.querySelector('span')?.textContent?.trim() || null,
       deliveryEta: delivery?.querySelector('small')?.textContent?.trim() || null,
       address,
-      total,
+      total: checkoutTotal(overlay),
       createdAt: new Date().toISOString(),
     }))
   }
 
-  function directHandoff(overlay) {
-    if (handoffActive) return
+  function triggerCoreSpendDirectly() {
+    // app.js listens for any bubbling click on [data-action="spend-wallet"].
+    // Trigger that action directly instead of clicking [data-action="checkout"],
+    // because commerce-core-v21 intercepts the checkout button and would reopen
+    // the V2 checkout screen again.
+    const trigger = document.createElement('button')
+    trigger.type = 'button'
+    trigger.hidden = true
+    trigger.dataset.action = 'spend-wallet'
+    trigger.setAttribute('aria-hidden', 'true')
+    document.body.appendChild(trigger)
+    trigger.click()
+    trigger.remove()
+  }
+
+  function pay(overlay) {
+    if (paymentActive) return
 
     const core = readCore()
-    const total = parseMoney(
-      overlay.querySelector('.v21-checkout-sheet > footer strong')?.textContent ||
-      overlay.querySelector('.v21-summary .total b')?.textContent || ''
-    )
+    const total = checkoutTotal(overlay)
     const balance = Number(core.walletBalance) || 0
     if (!total || total > balance) return
 
-    handoffActive = true
+    paymentActive = true
     saveCheckoutContext(overlay)
 
     const button = overlay.querySelector('[data-v21-pay]')
@@ -56,70 +71,28 @@
       button.innerHTML = '<span class="v22-pay-spinner"></span> Memproses...'
     }
 
-    const legacyObserver = new MutationObserver(() => {
-      const spend = document.querySelector('.checkout-modal [data-action="spend-wallet"]')
-      if (!spend) return
+    // Give the user immediate visual feedback, then hand off straight to the
+    // core spend action. There is no second V2 checkout and no legacy review.
+    window.setTimeout(() => {
+      overlay.remove()
+      triggerCoreSpendDirectly()
 
-      const legacyOverlay = spend.closest('.overlay')
-      if (legacyOverlay) {
-        legacyOverlay.style.opacity = '0'
-        legacyOverlay.style.visibility = 'hidden'
-        legacyOverlay.style.pointerEvents = 'none'
-      }
-
-      legacyObserver.disconnect()
-      spend.click()
-
-      setTimeout(() => {
-        handoffActive = false
+      // Core processing is ~850 ms. Unlock after the transition is safely done.
+      window.setTimeout(() => {
+        paymentActive = false
       }, 1200)
-    })
-
-    legacyObserver.observe(document.body, { childList: true, subtree: true })
-
-    // Keep the polished checkout visible while the legacy review screen is created
-    // behind it. It is never shown to the user; we immediately trigger its payment action.
-    const coreCheckout = document.querySelector('[data-action="checkout"]')
-    if (!coreCheckout) {
-      legacyObserver.disconnect()
-      handoffActive = false
-      if (button) {
-        button.disabled = false
-        button.removeAttribute('aria-busy')
-        button.textContent = 'Bayar Sekarang'
-      }
-      return
-    }
-
-    coreCheckout.click()
-
-    // app.js re-renders the root during the handoff. Remove the V2 checkout only
-    // after the spend action has been found, preventing a visual flash of review UI.
-    const cleanup = new MutationObserver(() => {
-      const processing = document.querySelector('.checkout-modal .processing')
-      if (!processing) return
-      cleanup.disconnect()
-      document.querySelector('#v21-checkout-overlay')?.remove()
-    })
-    cleanup.observe(document.body, { childList: true, subtree: true })
-
-    setTimeout(() => {
-      legacyObserver.disconnect()
-      cleanup.disconnect()
-      document.querySelector('#v21-checkout-overlay')?.remove()
-      handoffActive = false
-    }, 2500)
+    }, 140)
   }
 
   document.addEventListener('click', event => {
-    const pay = event.target.closest('#v21-checkout-overlay [data-v21-pay]')
-    if (!pay || pay.disabled) return
+    const payButton = event.target.closest('#v21-checkout-overlay [data-v21-pay]')
+    if (!payButton || payButton.disabled) return
 
     event.preventDefault()
     event.stopPropagation()
     event.stopImmediatePropagation()
 
-    const overlay = pay.closest('#v21-checkout-overlay')
-    if (overlay) directHandoff(overlay)
+    const overlay = payButton.closest('#v21-checkout-overlay')
+    if (overlay) pay(overlay)
   }, true)
 })()
