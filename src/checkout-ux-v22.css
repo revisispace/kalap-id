@@ -1,0 +1,450 @@
+/* KALAP! V2.2 — Checkout UX stabilization
+   Principles: clear hierarchy, recognition over recall, error prevention,
+   visible system state, consistent selection, stable task completion. */
+
+#v21-checkout-overlay.v21-overlay {
+  --checkout-accent: #ee4d2d;
+  --checkout-accent-soft: #fff3ef;
+  --checkout-success: #11865f;
+  --checkout-text: #201d1b;
+  --checkout-muted: #7f7874;
+  --checkout-border: #e8e3df;
+  --checkout-surface: #ffffff;
+  --checkout-page: #faf9f8;
+}
+
+#v21-checkout-overlay.food {
+  --checkout-accent: #0fa66f;
+  --checkout-accent-soft: #edf9f4;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet {
+  display: flex !important;
+  flex-direction: column !important;
+  width: min(680px, 100%) !important;
+  height: min(88dvh, 820px) !important;
+  max-height: min(88dvh, 820px) !important;
+  overflow: hidden !important;
+  background: var(--checkout-page) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > header {
+  position: relative !important;
+  top: auto !important;
+  flex: 0 0 64px !important;
+  min-height: 64px !important;
+  padding: 0 18px !important;
+  background: rgba(255,255,255,.98) !important;
+  border-bottom: 1px solid var(--checkout-border) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > header > strong {
+  font-size: 16px !important;
+  font-weight: 850 !important;
+  letter-spacing: -.25px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > header > span {
+  color: var(--checkout-muted) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > header > button {
+  width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  display: grid !important;
+  place-items: center !important;
+  color: var(--checkout-text) !important;
+  font-size: 18px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-scroll {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+  padding: 14px !important;
+  scroll-padding-bottom: 24px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-card {
+  margin: 0 0 10px !important;
+  padding: 15px !important;
+  border: 1px solid var(--checkout-border) !important;
+  border-radius: 17px !important;
+  background: var(--checkout-surface) !important;
+  box-shadow: 0 2px 8px rgba(27,22,19,.025) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-card > small {
+  display: block !important;
+  margin-bottom: 11px !important;
+  color: #948d88 !important;
+  font-size: 8px !important;
+  font-weight: 900 !important;
+  letter-spacing: .12em !important;
+  line-height: 1 !important;
+}
+
+/* Address — information first, secondary action visually secondary. */
+#v21-checkout-overlay .v21-address {
+  grid-template-columns: 38px minmax(0,1fr) auto !important;
+  gap: 11px !important;
+  margin: 0 !important;
+  align-items: center !important;
+}
+
+#v21-checkout-overlay .v21-address > span {
+  width: 38px !important;
+  height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 12px !important;
+  background: #f6f3f1 !important;
+  font-size: 19px !important;
+}
+
+#v21-checkout-overlay .v21-address > div {
+  display: grid !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+#v21-checkout-overlay .v21-address strong {
+  color: var(--checkout-text) !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+}
+
+#v21-checkout-overlay .v21-address p {
+  margin: 0 !important;
+  color: var(--checkout-muted) !important;
+  font-size: 10px !important;
+  line-height: 1.4 !important;
+}
+
+#v21-checkout-overlay .v21-address button {
+  min-height: 36px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  color: var(--checkout-accent) !important;
+  font-size: 10px !important;
+}
+
+#v21-checkout-overlay .v21-address button:hover {
+  background: var(--checkout-accent-soft) !important;
+}
+
+/* Delivery — selected state uses the product accent, never browser-blue focus. */
+#v21-checkout-overlay .v21-delivery-options {
+  gap: 8px !important;
+  margin: 0 !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button {
+  position: relative !important;
+  min-height: 62px !important;
+  padding: 11px 46px 11px 13px !important;
+  grid-template-columns: 1fr !important;
+  gap: 3px !important;
+  border: 1.5px solid #ddd7d3 !important;
+  border-radius: 14px !important;
+  background: #fff !important;
+  color: var(--checkout-text) !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, transform .12s ease !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button > span {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button > small {
+  color: var(--checkout-muted) !important;
+  font-size: 9px !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button > b {
+  position: absolute !important;
+  right: 13px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  grid-row: auto !important;
+  grid-column: auto !important;
+  color: var(--checkout-success) !important;
+  font-size: 9px !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button.active {
+  border-color: var(--checkout-accent) !important;
+  background: var(--checkout-accent-soft) !important;
+  box-shadow: 0 0 0 1px var(--checkout-accent) inset !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button.active::after {
+  content: '✓' !important;
+  position: absolute !important;
+  right: 12px !important;
+  bottom: 7px !important;
+  width: 17px !important;
+  height: 17px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 50% !important;
+  background: var(--checkout-accent) !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+}
+
+#v21-checkout-overlay .v21-delivery-options button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--checkout-accent) 28%, transparent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Payment — fixes KALAP WalletSaldo concatenation and makes balance scannable. */
+#v21-checkout-overlay .v21-payment {
+  grid-template-columns: 38px minmax(0,1fr) 28px !important;
+  gap: 11px !important;
+  margin: 0 !important;
+  align-items: center !important;
+}
+
+#v21-checkout-overlay .v21-payment > span {
+  width: 38px !important;
+  height: 38px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 12px !important;
+  background: #fff8dc !important;
+  font-size: 19px !important;
+}
+
+#v21-checkout-overlay .v21-payment > div {
+  display: grid !important;
+  gap: 3px !important;
+  min-width: 0 !important;
+}
+
+#v21-checkout-overlay .v21-payment strong {
+  color: var(--checkout-text) !important;
+  font-size: 13px !important;
+  line-height: 1.25 !important;
+}
+
+#v21-checkout-overlay .v21-payment small {
+  color: var(--checkout-muted) !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+}
+
+#v21-checkout-overlay .v21-payment > b {
+  width: 24px !important;
+  height: 24px !important;
+  display: grid !important;
+  place-items: center !important;
+  border-radius: 50% !important;
+  background: #eaf8f2 !important;
+  color: var(--checkout-success) !important;
+  font-size: 12px !important;
+}
+
+#v21-checkout-overlay .v21-payment.is-insufficient {
+  padding: 10px !important;
+  border: 1px solid #efc8bf !important;
+  border-radius: 13px !important;
+  background: #fff5f2 !important;
+}
+
+#v21-checkout-overlay .v21-payment.is-insufficient > b {
+  background: #f8ddd7 !important;
+  color: #bd3f2c !important;
+}
+
+/* Summary — total is the dominant number, not another ordinary row. */
+#v21-checkout-overlay .v21-summary {
+  gap: 9px !important;
+  margin: 0 !important;
+}
+
+#v21-checkout-overlay .v21-summary > div {
+  align-items: baseline !important;
+  color: #625c58 !important;
+  font-size: 11px !important;
+}
+
+#v21-checkout-overlay .v21-summary > div > b {
+  color: var(--checkout-text) !important;
+  font-weight: 750 !important;
+}
+
+#v21-checkout-overlay .v21-summary .total {
+  margin-top: 3px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid var(--checkout-border) !important;
+  color: var(--checkout-text) !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+#v21-checkout-overlay .v21-summary .total > b {
+  color: var(--checkout-text) !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  letter-spacing: -.35px !important;
+}
+
+/* Error prevention — shown before user attempts payment. */
+#v21-checkout-overlay .v22-checkout-warning {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: flex-start !important;
+  margin-top: 10px !important;
+  padding: 10px 11px !important;
+  border-radius: 12px !important;
+  background: #fff0ec !important;
+  color: #a83e2c !important;
+  font-size: 10px !important;
+  line-height: 1.4 !important;
+}
+
+/* Persistent task completion — CTA never disappears behind viewport chrome. */
+#v21-checkout-overlay .v21-checkout-sheet > footer {
+  position: relative !important;
+  z-index: 12 !important;
+  flex: 0 0 auto !important;
+  min-height: 76px !important;
+  box-sizing: border-box !important;
+  grid-template-columns: minmax(0,1fr) auto !important;
+  gap: 16px !important;
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom)) !important;
+  border-top: 1px solid var(--checkout-border) !important;
+  background: rgba(255,255,255,.98) !important;
+  box-shadow: 0 -10px 28px rgba(25,21,18,.07) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer > div {
+  display: grid !important;
+  align-content: center !important;
+  gap: 2px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer small {
+  color: var(--checkout-muted) !important;
+  font-size: 9px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer strong {
+  color: var(--checkout-text) !important;
+  font-size: 17px !important;
+  line-height: 1.15 !important;
+  letter-spacing: -.25px !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer button {
+  min-width: 190px !important;
+  min-height: 50px !important;
+  padding: 0 18px !important;
+  border-radius: 14px !important;
+  background: var(--checkout-accent) !important;
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  outline: none !important;
+  transition: transform .12s ease, opacity .16s ease, box-shadow .16s ease !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer button:hover:not(:disabled) {
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--checkout-accent) 25%, transparent) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer button:active:not(:disabled) {
+  transform: scale(.985) !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer button:disabled {
+  cursor: not-allowed !important;
+  background: #d7d2cf !important;
+  color: #8b8480 !important;
+  opacity: 1 !important;
+}
+
+#v21-checkout-overlay .v21-checkout-sheet > footer button:focus-visible,
+#v21-checkout-overlay .v21-address button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--checkout-accent) 28%, transparent) !important;
+  outline-offset: 2px !important;
+}
+
+/* Desktop modal proportions: less empty space, better scan path. */
+@media (min-width: 761px) and (hover: hover) {
+  #v21-checkout-overlay.v21-overlay {
+    align-items: center !important;
+    padding: 24px !important;
+    box-sizing: border-box !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet {
+    width: min(680px, calc(100vw - 48px)) !important;
+    height: min(84dvh, 790px) !important;
+    max-height: min(84dvh, 790px) !important;
+    border-radius: 26px !important;
+    box-shadow: 0 24px 80px rgba(0,0,0,.28) !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-scroll {
+    padding: 14px 16px 18px !important;
+  }
+}
+
+/* Mobile follows one-column commerce conventions and Fitts's Law. */
+@media (max-width: 760px), (hover: none) and (pointer: coarse) {
+  #v21-checkout-overlay .v21-checkout-sheet {
+    width: 100vw !important;
+    height: 90dvh !important;
+    max-height: 90dvh !important;
+    border-radius: 26px 26px 0 0 !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-scroll {
+    padding: 12px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-card {
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > footer {
+    grid-template-columns: minmax(0,.8fr) minmax(150px,1.2fr) !important;
+    gap: 10px !important;
+    min-height: 78px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > footer button {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 52px !important;
+  }
+}
+
+@media (max-width: 370px) {
+  #v21-checkout-overlay .v21-checkout-sheet > footer {
+    grid-template-columns: 1fr !important;
+  }
+
+  #v21-checkout-overlay .v21-checkout-sheet > footer > div {
+    grid-template-columns: auto 1fr !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+  }
+}
