@@ -1,0 +1,20 @@
+#v21-checkout-overlay [data-v21-pay][aria-busy="true"] {
+  cursor: wait !important;
+  opacity: .92 !important;
+}
+
+.v22-pay-spinner {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 8px;
+  border: 2px solid rgba(255,255,255,.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  vertical-align: -2px;
+  animation: v22PaySpin .7s linear infinite;
+}
+
+@keyframes v22PaySpin {
+  to { transform: rotate(360deg); }
+}
